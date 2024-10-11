@@ -1,56 +1,54 @@
-name: Deploy to GitHub Pages
+name: Deploy Svelte Website to GitHub Pages
 
 on:
   push:
-    branches: 'main'
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build_site:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
+      - name: Checkout the repository
         uses: actions/checkout@v4
 
-      # If you're using pnpm, add this step then change the commands and cache key below to use `pnpm`
-      # - name: Install pnpm
-      #   uses: pnpm/action-setup@v3
-      #   with:
-      #     version: 8
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 20
-          cache: npm
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
 
-      - name: build
-        env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
-        run: |
-          npm run build
+      - name: Build the Svelte app
+        run: npm run build
 
-      - name: Upload Artifacts
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # this should match the `pages` option in your adapter-static options
-          path: 'build/'
-
-  deploy:
-    needs: build_site
-    runs-on: ubuntu-latest
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy
+          # Upload entire repository
+          path: './build'
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
