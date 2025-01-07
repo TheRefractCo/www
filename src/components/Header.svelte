@@ -1,5 +1,6 @@
 <script>
-    export let type; // Declare the type prop
+  /** @type {{type: any}} */
+  let { type } = $props();
   </script>
   
   <header>
