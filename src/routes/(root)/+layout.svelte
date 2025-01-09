@@ -1,9 +1,10 @@
 <script>
-	import Header from "../../components/Header.svelte";
+import Header from "../../components/Header.svelte";
   /** @type {{children?: import('svelte').Snippet}} */
   let { children } = $props();
 
 </script>
+
 <Header type="main"></Header>
 <main>
     {@render children?.()}
