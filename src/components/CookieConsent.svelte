@@ -1,8 +1,7 @@
 <script lang="ts">
   	import posthog from 'posthog-js';
   import { onMount } from 'svelte';
-  import Clarity from '@microsoft/clarity';
-  //NPM patch related to clarity i did: replacing utils to utils.js in their source code
+  //import Clarity from '@microsoft/clarity';
   let showBanner = $state(true);
   let showPreferences = $state(false);
   
@@ -33,7 +32,7 @@
   }
 
   function acceptAll() {
-    Clarity.consent(true);
+    window.clarity("consent")
     posthog.capture('cookie_consent_accepted');
     posthog.opt_in_capturing();
     preferences = Object.fromEntries(
@@ -48,7 +47,7 @@
   }
 
   function rejectAll() {
-    Clarity.consent(false);
+    window.clarity('consent', false)
     window.clarity('stop')  // required to stop, mentioned on their github
     posthog.opt_out_capturing()
     preferences = Object.fromEntries(
@@ -96,8 +95,8 @@ export function loadPreferences() {
   return null;
 }
 onMount(() => {
-  Clarity.init(projectId);
-  Clarity.consent(preferences.analytics_storage);
+  //window.clarity.init(projectId);
+  window.clarity("consent")
     const savedPreferences = loadPreferences();
     if (savedPreferences) {
       preferences = savedPreferences;

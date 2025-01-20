@@ -28,6 +28,8 @@ load()
 	@import '../styles/landing.css';
 
 	body {
+		margin: 0;
+		background-color: red;
 		color: var(--primary-color);
 	  font-size: var(--font-size);
 	}
