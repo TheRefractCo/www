@@ -21,7 +21,7 @@
     {#if type === 'main'}
       <nav>
         <ul>
-          <li><a href="/"><img src="/icon.svg" alt="Home"></a></li>
+          <li><a href="/"><img alt="Home"></a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/blog">Blog</a></li>
         </ul>
