@@ -1,0 +1,12 @@
+:root {
+	color-scheme: light dark;
+}
+
+body {
+	background: Canvas;
+	color: CanvasText;
+}
+
+a {
+	color: LinkText;
+}
