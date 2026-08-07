@@ -1,0 +1,203 @@
+---
+import type { LightFieldQuality, LightFieldTheme } from '../scripts/lightfield';
+
+interface Props {
+	primary: string;
+	secondary: string;
+	theme?: LightFieldTheme | 'auto';
+	quality?: LightFieldQuality;
+	interactive?: boolean;
+	className?: string;
+	labelledBy?: string;
+}
+
+const {
+	primary,
+	secondary,
+	theme = 'auto',
+	quality = 'auto',
+	interactive = true,
+	className,
+	labelledBy,
+} = Astro.props;
+---
+
+<section
+	class:list={['lightfield-hero', className]}
+	aria-labelledby={labelledBy}
+	data-lightfield-primary={primary}
+	data-lightfield-secondary={secondary}
+	data-lightfield-theme={theme}
+	data-lightfield-quality={quality}
+	data-lightfield-interactive={interactive ? 'true' : 'false'}
+>
+	<div
+		class="lightfield"
+		data-lightfield
+		data-primary={primary}
+		data-secondary={secondary}
+		data-theme={theme}
+		data-theme-mode={theme}
+		data-quality={quality}
+		data-interactive={interactive ? 'true' : 'false'}
+		transition:persist="refract-lightfield"
+		style={`--lightfield-primary: ${primary}; --lightfield-secondary: ${secondary};`}
+		aria-hidden="true"
+	>
+		<canvas class="lightfield__canvas"></canvas>
+		<div class="lightfield__fallback" aria-hidden="true">
+			<i class="lightfield__dust lightfield__dust--far"></i>
+			<i class="lightfield__dust lightfield__dust--near"></i>
+		</div>
+	</div>
+	<div class="lightfield-hero__content">
+		<slot />
+	</div>
+</section>
+
+<style>
+	.lightfield-hero {
+		position: relative;
+		width: 100vw;
+		min-block-size: 100svh;
+		max-width: none;
+		margin-block-start: calc(-1 * var(--page-gutter, 1.5rem));
+		margin-inline-start: calc(50% - 50vw);
+		isolation: isolate;
+		overflow: hidden;
+	}
+
+	.lightfield-hero::after {
+		position: absolute;
+		z-index: 1;
+		inset: auto 0 0;
+		height: 20%;
+		pointer-events: none;
+		content: '';
+		background: linear-gradient(to bottom, transparent, var(--background));
+	}
+
+	.lightfield-hero__content {
+		position: relative;
+		z-index: 2;
+	}
+</style>
+
+<script>
+	import { createLightField, type LightFieldController, type LightFieldQuality, type LightFieldTheme } from '../scripts/lightfield';
+
+		type LightFieldRuntime = {
+		controllers: Map<HTMLElement, LightFieldController>;
+		mount: () => void;
+		pause: () => void;
+		unmount: () => void;
+	};
+
+	const windowWithRuntime = window as Window & {
+		refractLightFieldRuntime?: LightFieldRuntime;
+	};
+
+	let runtime = windowWithRuntime.refractLightFieldRuntime;
+
+	if (!runtime) {
+		const controllers = new Map<HTMLElement, LightFieldController>();
+		const lightScheme = window.matchMedia('(prefers-color-scheme: light)');
+		let mountFrame = 0;
+
+		const resolveTheme = (root: HTMLElement): LightFieldTheme => {
+			if (root.dataset.themeMode === 'auto') return lightScheme.matches ? 'light' : 'dark';
+			return (root.dataset.theme ?? 'dark') as LightFieldTheme;
+		};
+
+		const readConfig = (root: HTMLElement) => {
+			const hero = root.closest<HTMLElement>('.lightfield-hero');
+			return {
+				primary: hero?.dataset.lightfieldPrimary ?? root.dataset.primary,
+				secondary: hero?.dataset.lightfieldSecondary ?? root.dataset.secondary,
+				theme: hero?.dataset.lightfieldTheme ?? root.dataset.themeMode ?? root.dataset.theme ?? 'auto',
+				quality: hero?.dataset.lightfieldQuality ?? root.dataset.quality ?? 'auto',
+				interactive: hero?.dataset.lightfieldInteractive ?? root.dataset.interactive ?? 'true',
+			};
+		};
+
+		const mount = () => {
+			if (mountFrame) cancelAnimationFrame(mountFrame);
+			mountFrame = requestAnimationFrame(() => {
+				mountFrame = requestAnimationFrame(() => {
+					mountFrame = 0;
+						document.querySelectorAll<HTMLElement>('[data-lightfield]').forEach((root) => {
+							if (!root.isConnected) return;
+
+							const config = readConfig(root);
+							const primary = config.primary;
+							const secondary = config.secondary;
+							if (!primary || !secondary) return;
+							root.dataset.primary = primary;
+							root.dataset.secondary = secondary;
+							root.dataset.themeMode = config.theme;
+							root.dataset.quality = config.quality;
+							root.dataset.interactive = config.interactive;
+							const existing = controllers.get(root);
+							if (existing) {
+								existing.setColors(primary, secondary);
+							existing.setTheme(resolveTheme(root));
+							existing.setDualColor(true);
+							existing.setInteractive(root.dataset.interactive !== 'false');
+							existing.refresh();
+							existing.resume();
+							return;
+						}
+
+						controllers.set(
+							root,
+							createLightField(root, {
+								primary,
+								secondary,
+								dualColor: true,
+								theme: resolveTheme(root),
+								quality: (root.dataset.quality ?? 'auto') as LightFieldQuality,
+								interactive: root.dataset.interactive !== 'false',
+							}),
+						);
+					});
+				});
+			});
+		};
+
+		const pause = () => {
+			controllers.forEach((controller) => controller.pause());
+		};
+
+		const unmount = () => {
+			if (mountFrame) {
+				cancelAnimationFrame(mountFrame);
+				mountFrame = 0;
+			}
+			controllers.forEach((controller, root) => {
+				if (root.isConnected) {
+					controller.pause();
+					return;
+				}
+				controller.destroy();
+				controllers.delete(root);
+			});
+		};
+
+		const syncTheme = () => {
+			controllers.forEach((controller, root) => {
+				if (root.dataset.themeMode === 'auto') {
+					controller.setTheme(lightScheme.matches ? 'light' : 'dark');
+				}
+			});
+		};
+
+		runtime = { controllers, mount, pause, unmount };
+		windowWithRuntime.refractLightFieldRuntime = runtime;
+		document.addEventListener('astro:before-preparation', pause);
+		document.addEventListener('astro:after-swap', unmount);
+		document.addEventListener('astro:page-load', mount);
+		lightScheme.addEventListener('change', syncTheme);
+	}
+
+	runtime.mount();
+</script>

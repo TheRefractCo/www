@@ -16,81 +16,47 @@ interface Props {
 
 const { title, description, image, pageClass, footerVariant = 'default' } = Astro.props;
 
-const refractPageTransition = {
+const pageTransition = {
 	forwards: {
-		old: [
-			{
-				name: 'refract-fade-out',
-				duration: '220ms',
-				easing: 'ease-out',
-				fillMode: 'both',
-			},
-			{
-				name: 'refract-nudge-out-left',
-				duration: '260ms',
-				easing: 'cubic-bezier(0.4, 0, 1, 1)',
-				fillMode: 'both',
-			},
-		],
-		new: [
-			{
-				name: 'refract-fade-in',
-				duration: '420ms',
-				easing: 'ease-out',
-				fillMode: 'both',
-			},
-			{
-				name: 'refract-nudge-in-right',
-				delay: '90ms',
-				duration: '330ms',
-				easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-				fillMode: 'both',
-			},
-		],
+		old: {
+			name: 'refractPageFadeOut',
+			duration: '280ms',
+			easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+			fillMode: 'both',
+		},
+		new: {
+			name: 'refractPageFadeIn',
+			duration: '280ms',
+			easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+			fillMode: 'both',
+		},
 	},
 	backwards: {
-		old: [
-			{
-				name: 'refract-fade-out',
-				duration: '220ms',
-				easing: 'ease-out',
-				fillMode: 'both',
-			},
-			{
-				name: 'refract-nudge-out-right',
-				duration: '260ms',
-				easing: 'cubic-bezier(0.4, 0, 1, 1)',
-				fillMode: 'both',
-			},
-		],
-		new: [
-			{
-				name: 'refract-fade-in',
-				duration: '420ms',
-				easing: 'ease-out',
-				fillMode: 'both',
-			},
-			{
-				name: 'refract-nudge-in-left',
-				delay: '90ms',
-				duration: '330ms',
-				easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-				fillMode: 'both',
-			},
-		],
+		old: {
+			name: 'refractPageFadeOutBack',
+			duration: '280ms',
+			easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+			fillMode: 'both',
+		},
+		new: {
+			name: 'refractPageFadeInBack',
+			duration: '280ms',
+			easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+			fillMode: 'both',
+		},
 	},
 };
 ---
 
 <!doctype html>
-<html lang="en" transition:name="root" transition:animate="none">
+<html lang="en">
 	<head>
 		<BaseHead title={title} description={description} image={image} />
 		<ClientRouter />
 	</head>
 	<body class={pageClass}>
 		<RefractHeader />
-		<div transition:animate={refractPageTransition}>
+		<div class="page-transition-shell" transition:name="refract-content" transition:animate={pageTransition}>
 			<main>
 				<slot />
 			</main>
@@ -100,32 +66,59 @@ const refractPageTransition = {
 	</body>
 </html>
 
-<script>
-	import type { TransitionBeforePreparationEvent } from 'astro:transitions/client';
+<style is:global>
+	.page-transition-shell {
+		width: 100%;
+	}
 
-	const headerRouteIndex = (url: URL) => {
-		const path = url.pathname.replace(/\/+$/, '') || '/';
+	::view-transition-group(refract-content) {
+		animation: none;
+	}
 
-		if (path === '/') return 0;
-		if (path === '/projects') return 1;
-		if (path === '/paper') return 2;
-		if (path === '/blog' || path.startsWith('/blog/')) return 3;
-		if (path === '/about') return 4;
-		if (path === '/contact') return 5;
+	@keyframes refractPageFadeOut {
+		from {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+		to {
+			opacity: 0;
+			transform: translate3d(-0.9rem, 0, 0);
+		}
+	}
 
-		return undefined;
-	};
+	@keyframes refractPageFadeIn {
+		from {
+			opacity: 0;
+			transform: translate3d(0.9rem, 0, 0);
+		}
+		to {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
 
-	document.addEventListener('astro:before-preparation', (event) => {
-		const navigation = event as TransitionBeforePreparationEvent;
-		const fromIndex = headerRouteIndex(navigation.from);
-		const toIndex = headerRouteIndex(navigation.to);
+	@keyframes refractPageFadeOutBack {
+		from {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+		to {
+			opacity: 0;
+			transform: translate3d(0.9rem, 0, 0);
+		}
+	}
 
-		if (fromIndex === undefined || toIndex === undefined || fromIndex === toIndex) return;
-
-		navigation.direction = toIndex > fromIndex ? 'forward' : 'back';
-	});
-</script>
+	@keyframes refractPageFadeInBack {
+		from {
+			opacity: 0;
+			transform: translate3d(-0.9rem, 0, 0);
+		}
+		to {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+</style>
 
 <script>
 	const prepareStaggeredHeadings = () => {
@@ -176,4 +169,26 @@ const refractPageTransition = {
 		windowWithHeadingSetup.refractHeadingSetup = true;
 	}
 	prepareStaggeredHeadings();
+
+	const routeOrder = ['/', '/projects/', '/blog/', '/about/', '/contact/'];
+	const routeIndex = (pathname: string) => {
+		const normalized = pathname.replace(/\/+$/, '') || '/';
+		const index = routeOrder.findIndex((route) => {
+			const normalizedRoute = route.replace(/\/+$/, '') || '/';
+			return normalized === normalizedRoute || (normalizedRoute !== '/' && normalized.startsWith(`${normalizedRoute}/`));
+		});
+		return index;
+	};
+
+	const windowWithTransitionSetup = window as Window & { refractTransitionSetup?: boolean };
+	if (!windowWithTransitionSetup.refractTransitionSetup) {
+		document.addEventListener('astro:before-preparation', (event) => {
+			if (event.navigationType !== 'push') return;
+			const fromIndex = routeIndex(event.from.pathname);
+			const toIndex = routeIndex(event.to.pathname);
+			if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+			event.direction = toIndex > fromIndex ? 'forward' : 'back';
+		});
+		windowWithTransitionSetup.refractTransitionSetup = true;
+	}
 </script>

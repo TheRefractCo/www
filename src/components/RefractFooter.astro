@@ -11,43 +11,51 @@ const { variant = 'default' } = Astro.props;
 ---
 
 <footer class:list={['site-footer', `site-footer--${variant}`]}>
-	<div class="site-footer__inner">
-		{variant === 'default' && <SocialLinks className="footer-social" />}
+	{variant === 'default' && (
+		<div class="footer-social-band">
+			<div class="site-footer__inner">
+				<SocialLinks className="footer-social" variant="footer" />
+			</div>
+		</div>
+	)}
 
-		<div class="footer-directory">
-			<div class="footer-intro">
-				<img src={refractWordmark.src} alt="Refract" />
-				<p>Thoughtful software, made independently and with care.</p>
+	<div class="footer-main">
+		<div class="site-footer__inner">
+			<div class="footer-directory">
+				<div class="footer-intro">
+					<img src={refractWordmark.src} alt="Refract" />
+					<p>Thoughtful software, made independently and with care.</p>
+				</div>
+
+				<nav class="footer-nav" aria-label="Footer navigation">
+					<section>
+						<h2>Explore</h2>
+						<a href="/projects/">Projects</a>
+						<a href="/paper/">Paper</a>
+						<a href="/blog/">Blog</a>
+					</section>
+					<section>
+						<h2>Company</h2>
+						<a href="/about/">About</a>
+						<a href="/contact/">Contact</a>
+						<a href="/privacy/">Privacy</a>
+						<button class="analytics-settings" type="button" data-analytics-settings hidden>
+							Analytics choices
+						</button>
+					</section>
+					<section>
+						<h2>Site</h2>
+						<a href="/sitemap-index.xml">Sitemap</a>
+						<a href="/robots.txt">Robots.txt</a>
+						<a href="/rss.xml">RSS feed</a>
+					</section>
+				</nav>
 			</div>
 
-			<nav class="footer-nav" aria-label="Footer navigation">
-				<section>
-					<h2>Explore</h2>
-					<a href="/projects/">Projects</a>
-					<a href="/paper/">Paper</a>
-					<a href="/blog/">Blog</a>
-				</section>
-				<section>
-					<h2>Company</h2>
-					<a href="/about/">About</a>
-					<a href="/contact/">Contact</a>
-					<a href="/privacy/">Privacy</a>
-					<button class="analytics-settings" type="button" data-analytics-settings hidden>
-						Analytics choices
-					</button>
-				</section>
-				<section>
-					<h2>Site</h2>
-					<a href="/sitemap-index.xml">Sitemap</a>
-					<a href="/robots.txt">Robots.txt</a>
-					<a href="/rss.xml">RSS feed</a>
-				</section>
-			</nav>
-		</div>
-
-		<div class="footer-bottom">
-			<span>&copy; {today.getFullYear()} The Refract Co.</span>
-			<span>Independent since 2023.</span>
+			<div class="footer-bottom">
+				<span>&copy; {today.getFullYear()} The Refract Co.</span>
+				<span>Independent since 2023.</span>
+			</div>
 		</div>
 	</div>
 </footer>

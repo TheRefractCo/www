@@ -10,46 +10,10 @@
 }
 
 .info-hero {
-	position: relative;
-	overflow: hidden;
+	min-height: 100svh;
 	margin-bottom: 1.5rem;
 	padding: clamp(2rem, 7vw, 4.75rem);
-	border: 1px solid var(--border);
-	border-radius: var(--info-radius);
-	isolation: isolate;
-}
-
-.info-hero::before,
-.info-hero::after {
-	position: absolute;
-	z-index: -1;
-	border-radius: 999px;
-	content: '';
-	filter: blur(1px);
-}
-
-.info-hero::before {
-	top: -9rem;
-	right: -6rem;
-	width: 22rem;
-	height: 22rem;
-	background: rgba(45, 116, 238, 0.14);
-}
-
-.info-hero::after {
-	right: 11rem;
-	bottom: -9rem;
-	width: 15rem;
-	height: 15rem;
-	background: rgba(123, 78, 219, 0.12);
-}
-
-.info-hero--contact::after {
-	background: rgba(239, 139, 36, 0.13);
-}
-
-.info-hero--about::before {
-	background: rgba(93, 210, 155, 0.13);
+	color: #f4f7ff;
 }
 
 .eyebrow {
@@ -64,14 +28,18 @@
 .info-hero h1 {
 	max-width: 12ch;
 	margin-bottom: 1.4rem;
-	font-size: clamp(2.6rem, 8vw, 5.25rem);
+	font-size: clamp(2.35rem, 5.5vw, 4.5rem);
 	letter-spacing: -0.06em;
+}
+
+.info-hero .eyebrow {
+	color: #b7d3ff;
 }
 
 .info-hero__lead {
 	max-width: 39rem;
 	margin: 0;
-	color: var(--muted);
+	color: rgba(235, 242, 255, 0.74);
 	font-size: clamp(1rem, 2vw, 1.15rem);
 }
 
@@ -79,6 +47,12 @@
 	display: grid;
 	gap: 0.85rem;
 	margin: 1.5rem 0;
+}
+
+.contact-page .email-list {
+	position: relative;
+	z-index: 3;
+	margin-top: clamp(-7rem, -10vh, -4rem);
 }
 
 .email-card {
@@ -89,10 +63,12 @@
 	gap: 1.1rem 1.5rem;
 	align-items: center;
 	padding: clamp(1.25rem, 4vw, 1.75rem);
-	background: var(--surface);
+	background: color-mix(in srgb, var(--surface) 72%, transparent);
 	border: 1px solid var(--border);
 	border-radius: var(--info-radius);
 	scroll-margin-top: 1.5rem;
+	-webkit-backdrop-filter: blur(18px) saturate(1.08);
+	backdrop-filter: blur(18px) saturate(1.08);
 	transition:
 		border-color 150ms ease,
 		box-shadow 150ms ease;
@@ -532,6 +508,20 @@
 	}
 }
 
+@media (prefers-color-scheme: light) {
+	.info-hero {
+		color: var(--text);
+	}
+
+	.info-hero .eyebrow {
+		color: var(--info-blue);
+	}
+
+	.info-hero__lead {
+		color: var(--muted);
+	}
+}
+
 @media (max-width: 46rem) {
 	.email-card {
 		grid-template-columns: 1fr;
@@ -569,7 +559,6 @@
 @media (max-width: 32rem) {
 	.info-hero {
 		padding: 1.5rem;
-		border-radius: 1.4rem;
 	}
 
 	.info-hero h1 br {

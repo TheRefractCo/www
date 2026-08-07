@@ -2,21 +2,30 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from './RefractBaseLayout.astro';
+import '../styles/blog-pages.css';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<RefractBaseLayout title={title} description={description} image={heroImage}>
-	<article>
+<RefractBaseLayout title={title} description={description} image={heroImage} pageClass="blog-post-shell">
+	<article class="blog-post">
+		<LightFieldHero
+			className="blog-post-hero"
+			primary="#7aa8ff"
+			secondary="#d08bff"
+		>
+			<p class="eyebrow">The blog</p>
+			<p class="blog-post-hero__date">
+				<FormattedDate date={pubDate} />
+				{updatedDate && <> · Updated <FormattedDate date={updatedDate} /></>}
+			</p>
+			<h1>{title}</h1>
+		</LightFieldHero>
 		{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-		<p>
-			<FormattedDate date={pubDate} />
-			{updatedDate && <> · Updated <FormattedDate date={updatedDate} /></>}
-		</p>
-		<h1>{title}</h1>
-		<slot />
+		<div class="blog-post__body"><slot /></div>
 	</article>
 </RefractBaseLayout>

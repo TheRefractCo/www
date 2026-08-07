@@ -1,6 +1,7 @@
 ---
 import CopyToast from '../components/CopyToast.astro';
 import EmailCard from '../components/EmailCard.astro';
+import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
 import SocialLinks from '../components/SocialLinks.astro';
 import '../styles/info-pages.css';
@@ -13,13 +14,18 @@ import '../styles/info-pages.css';
 	footerVariant="compact"
 >
 	<div class="info-page contact-page">
-		<section class="info-hero info-hero--contact" aria-labelledby="contact-title">
+		<LightFieldHero
+			className="info-hero info-hero--contact"
+			primary="#ffb26b"
+			secondary="#ff70c4"
+			labelledBy="contact-title"
+		>
 			<p class="eyebrow">Contact</p>
 			<h1 id="contact-title">Let’s get your message<br />to the right place.</h1>
 			<p class="info-hero__lead">
 				Choose an inbox below. You can open your mail app or copy the address in one click.
 			</p>
-		</section>
+		</LightFieldHero>
 
 		<div class="email-list" aria-label="Refract email addresses">
 			<EmailCard

@@ -1,6 +1,7 @@
 ---
 import CopyToast from "../components/CopyToast.astro";
 import EmailCard from "../components/EmailCard.astro";
+import LightFieldHero from "../components/LightFieldHero.astro";
 import RefractBaseLayout from "../layouts/RefractBaseLayout.astro";
 import "../styles/info-pages.css";
 ---
@@ -8,11 +9,14 @@ import "../styles/info-pages.css";
 <RefractBaseLayout
   title="Privacy | The Refract Co."
   description="Plain-English privacy information for refract.fyi and the Paper app by The Refract Co."
+  pageClass="privacy-shell"
 >
   <div class="info-page privacy-page">
-    <section
-      class="info-hero info-hero--privacy"
-      aria-labelledby="privacy-title"
+    <LightFieldHero
+      className="info-hero info-hero--privacy"
+      primary="#a5d7ff"
+      secondary="#93e8c8"
+      labelledBy="privacy-title"
     >
       <p class="eyebrow">Privacy</p>
       <h1 id="privacy-title">Your information<br />stays yours.</h1>
@@ -20,7 +24,7 @@ import "../styles/info-pages.css";
         No legalese. Just a clear account of what this website and Paper
         collect, why they collect it, and the choices you have.
       </p>
-    </section>
+    </LightFieldHero>
 
     <div class="privacy-principles" aria-label="Privacy principles">
       <div>

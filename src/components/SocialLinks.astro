@@ -1,11 +1,10 @@
 ---
-import { siGithub, siX } from 'simple-icons';
-
 interface Props {
 	className?: string;
+	variant?: 'page' | 'footer';
 }
 
-const { className } = Astro.props;
+const { className, variant = 'page' } = Astro.props;
 const analyticsLocation = className?.includes('footer') ? 'footer' : 'page';
 
 const socials = [
@@ -13,21 +12,34 @@ const socials = [
 		name: 'X',
 		handle: '@TheRefractCo',
 		href: 'https://x.com/TheRefractCo',
-		icon: siX,
+		icon: 'x',
 		className: 'social-link--x',
 	},
 	{
 		name: 'GitHub',
 		handle: 'TheRefractCo',
 		href: 'https://github.com/TheRefractCo',
-		icon: siGithub,
+		icon: 'github',
 		className: 'social-link--github',
 	},
 ];
 ---
 
-<div class:list={['social-links', className]} aria-label="Refract on social media">
-	{
+<div
+	class:list={['social-links', className]}
+	aria-label={variant === 'page' ? 'Refract on social media' : undefined}
+	aria-labelledby={variant === 'footer' ? 'footer-social-title' : undefined}
+>
+	{variant === 'footer' && (
+		<div class="social-links__intro">
+			<p class="social-links__eyebrow">Elsewhere</p>
+			<h2 id="footer-social-title">Find us on socials</h2>
+			<p>New work, small details, and the occasional thought from Refract.</p>
+		</div>
+	)}
+
+	<div class="social-links__items">
+		{
 			socials.map(({ name, handle, href, icon, className: socialClass }) => (
 			<a
 				class:list={['social-link', socialClass]}
@@ -37,9 +49,18 @@ const socials = [
 				data-analytics-location={analyticsLocation}
 			>
 				<span class="social-link__icon" aria-hidden="true">
-					<svg viewBox="0 0 24 24" role="img">
-						<path d={icon.path} />
-					</svg>
+					{icon === 'x' ? (
+						<svg viewBox="0 0 24 24" role="img">
+							<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.967 6.817H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+						</svg>
+					) : (
+						<svg viewBox="0 0 16 16" role="img">
+							<path
+								fill-rule="evenodd"
+								d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+							/>
+						</svg>
+					)}
 				</span>
 				<span class="social-link__copy">
 					<strong>{name}</strong>
@@ -47,6 +68,7 @@ const socials = [
 				</span>
 				<span class="social-link__arrow" aria-hidden="true">↗</span>
 			</a>
-		))
-	}
+			))
+		}
+	</div>
 </div>

@@ -1,0 +1,172 @@
+.lightfield {
+	--lightfield-primary: #3bbcff;
+	--lightfield-secondary: #3bbcff;
+	position: absolute;
+	inset: 0;
+	isolation: isolate;
+	overflow: hidden;
+	background: var(--background, var(--lightfield-dark-background, #020715));
+}
+
+.lightfield__canvas,
+.lightfield__fallback {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.lightfield__canvas {
+	z-index: 1;
+	display: block;
+	opacity: 0;
+	transition: opacity 1.1s cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+
+.lightfield[data-lightfield-ready='true'] .lightfield__canvas {
+	opacity: 1;
+}
+
+.lightfield__fallback {
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
+	opacity: 1;
+	background:
+		radial-gradient(
+			ellipse 54% 46% at 94% 53%,
+			color-mix(in srgb, var(--lightfield-secondary) 34%, transparent),
+			transparent 76%
+		),
+		linear-gradient(169deg, var(--background) 14%, color-mix(in srgb, var(--background) 84%, #071630) 49%, color-mix(in srgb, var(--background) 76%, #071b3e) 75%, var(--background) 100%);
+	transition: opacity 0.35s ease;
+}
+
+.lightfield[data-lightfield-ready='true']:not([data-fallback='true']):not([data-force-fallback])
+	.lightfield__fallback {
+	opacity: 0;
+}
+
+.lightfield[data-fallback='true'] .lightfield__canvas,
+.lightfield[data-force-fallback] .lightfield__canvas {
+	opacity: 0;
+}
+
+.lightfield__fallback::before {
+	position: absolute;
+	inset: -16% -10%;
+	content: '';
+	background: linear-gradient(
+		169deg,
+		transparent 26%,
+		color-mix(in srgb, var(--lightfield-primary) 34%, transparent) 43%,
+		color-mix(in srgb, var(--lightfield-secondary) 46%, transparent) 55%,
+		color-mix(in srgb, var(--lightfield-secondary) 12%, transparent) 68%,
+		transparent 78%
+	);
+	filter: blur(24px);
+	transform: translate3d(2%, 0, 0) scale(1.08);
+}
+
+.lightfield__dust {
+	position: absolute;
+	inset: -8%;
+	display: block;
+	opacity: 0.58;
+	background-image:
+		radial-gradient(circle, var(--lightfield-primary) 0 1px, transparent 1.7px),
+		radial-gradient(circle, var(--lightfield-secondary) 0 0.8px, transparent 1.55px);
+	background-position: 9px 13px, 31px 7px;
+	background-size: 47px 53px, 73px 67px;
+	mask-image: radial-gradient(
+		ellipse 72% 68% at 84% 53%,
+		#000 8%,
+		rgba(0, 0, 0, 0.82) 44%,
+		transparent 82%
+	);
+	animation: lightfield-fallback-drift 18s linear infinite alternate;
+}
+
+.lightfield__dust--far {
+	opacity: 0.32;
+	background-size: 31px 37px, 59px 61px;
+	filter: blur(0.35px);
+	animation-duration: 27s;
+}
+
+.lightfield__dust--near {
+	inset: -12%;
+	background-position: 23px 5px, 3px 29px;
+	background-size: 89px 83px, 113px 107px;
+}
+
+.lightfield[data-theme='light'],
+.lightfield[data-theme='auto'] {
+	background: var(--lightfield-light-background, #e3e9ed);
+}
+
+.lightfield[data-theme='light'] .lightfield__fallback,
+.lightfield[data-theme='auto'] .lightfield__fallback {
+	background:
+		radial-gradient(
+			ellipse 52% 44% at 94% 53%,
+			color-mix(in srgb, var(--lightfield-secondary) 24%, transparent),
+			transparent 76%
+		),
+		linear-gradient(169deg, #f5f7f8 12%, #e8eff2 52%, #dce9ee 78%, #eef3f5 100%);
+}
+
+.lightfield[data-theme='light'] .lightfield__fallback::before,
+.lightfield[data-theme='auto'] .lightfield__fallback::before {
+	opacity: 0.76;
+	filter: blur(18px);
+}
+
+.lightfield[data-theme='light'] .lightfield__dust,
+.lightfield[data-theme='auto'] .lightfield__dust {
+	opacity: 0.4;
+	filter: brightness(0.62) saturate(1.2);
+}
+
+@media (prefers-color-scheme: dark) {
+	.lightfield[data-theme='auto'] {
+		background: var(--lightfield-dark-background, #020715);
+	}
+
+	.lightfield[data-theme='auto'] .lightfield__fallback {
+		background:
+			radial-gradient(
+				ellipse 54% 46% at 94% 53%,
+				color-mix(in srgb, var(--lightfield-secondary) 34%, transparent),
+				transparent 76%
+			),
+			linear-gradient(169deg, #020715 14%, #071630 49%, #071b3e 75%, #03091c 100%);
+	}
+
+	.lightfield[data-theme='auto'] .lightfield__fallback::before {
+		opacity: 1;
+		filter: blur(24px);
+	}
+
+	.lightfield[data-theme='auto'] .lightfield__dust {
+		opacity: 0.58;
+		filter: none;
+	}
+}
+
+@keyframes lightfield-fallback-drift {
+	to {
+		transform: translate3d(2.5%, -1.5%, 0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.lightfield__canvas,
+	.lightfield__fallback {
+		transition-duration: 0.01ms;
+	}
+
+	.lightfield__dust {
+		animation: none;
+	}
+}

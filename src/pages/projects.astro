@@ -5,6 +5,7 @@ import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
 import siteContact from '../assets/projects/site/site-contact.png';
 import siteHome from '../assets/projects/site/site-home.png';
 import sitePrivacy from '../assets/projects/site/site-privacy.png';
+import LightFieldHero from '../components/LightFieldHero.astro';
 import PaperActions from '../components/PaperActions.astro';
 import PaperScreenshotRail from '../components/PaperScreenshotRail.astro';
 import SnapCarousel from '../components/SnapCarousel.astro';
@@ -18,14 +19,19 @@ import '../styles/product-pages.css';
 	pageClass="wide-page projects-shell"
 >
 	<div class="projects-page">
-		<section class="projects-intro" aria-labelledby="projects-title">
+		<LightFieldHero
+			className="projects-intro"
+			primary="#7cf4c9"
+			secondary="#7094ff"
+			labelledBy="projects-title"
+		>
 			<p class="product-kicker">The work</p>
 			<h1 id="projects-title">Things we make<br />and care about.</h1>
 			<p>
 				Independent software with a point of view: useful first, considered throughout, and never
 				busier than it needs to be.
 			</p>
-		</section>
+		</LightFieldHero>
 
 		<article id="paper" class="project-feature project-feature--paper">
 			<header class="project-feature__header">

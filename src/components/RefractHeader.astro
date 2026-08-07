@@ -3,10 +3,10 @@ import HeaderLink from './HeaderLink.astro';
 import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
 ---
 
-<header>
+<header class="site-header" data-site-header transition:persist="refract-header" transition:animate="none">
 	<nav>
 		<h2>
-			<a class="site-brand" href="/">
+			<a class="site-brand" href="/" data-header-link>
 				<img class="site-brand__wordmark" src={refractWordmark.src} alt="Refract" />
 			</a>
 		</h2>
@@ -19,3 +19,56 @@ import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
 		</div>
 	</nav>
 </header>
+
+<script>
+	const normalizePath = (value: string) => {
+		const withoutTrailingSlash = value.replace(/\/+$/, '');
+		return withoutTrailingSlash || '/';
+	};
+
+	const isCurrentRoute = (target: string, current: string) =>
+	target === '/' ? current === '/' : current === target || current.startsWith(`${target}/`);
+
+	const updateActiveLinks = () => {
+		const currentPath = normalizePath(window.location.pathname);
+		document.querySelectorAll<HTMLAnchorElement>('[data-header-link]').forEach((link) => {
+			const targetPath = normalizePath(new URL(link.href, window.location.href).pathname);
+			const active = isCurrentRoute(targetPath, currentPath);
+			link.classList.toggle('active', active);
+			if (active) link.setAttribute('aria-current', 'page');
+			else link.removeAttribute('aria-current');
+		});
+	};
+
+	const preventSameRouteNavigation = (event: MouseEvent) => {
+		if (!(event.target instanceof Element)) return;
+		const link = event.target.closest<HTMLAnchorElement>('a[data-header-link]');
+		if (!link) return;
+
+		const target = new URL(link.href, window.location.href);
+		if (
+			target.origin === window.location.origin &&
+			normalizePath(target.pathname) === normalizePath(window.location.pathname) &&
+			target.search === window.location.search &&
+			!target.hash
+		) {
+			event.preventDefault();
+			link.blur();
+		}
+	};
+
+	const updateHeader = () => {
+		const header = document.querySelector<HTMLElement>('[data-site-header]');
+		header?.toggleAttribute('data-scrolled', window.scrollY > 16);
+		updateActiveLinks();
+	};
+
+	const windowWithHeaderSetup = window as Window & { refractHeaderSetup?: boolean };
+	if (!windowWithHeaderSetup.refractHeaderSetup) {
+		window.addEventListener('scroll', updateHeader, { passive: true });
+		document.addEventListener('astro:page-load', updateHeader);
+		document.addEventListener('click', preventSameRouteNavigation, true);
+		windowWithHeaderSetup.refractHeaderSetup = true;
+	}
+	updateHeader();
+</script>

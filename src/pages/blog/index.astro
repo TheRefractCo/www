@@ -2,17 +2,35 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
+import LightFieldHero from '../../components/LightFieldHero.astro';
 import RefractBaseLayout from '../../layouts/RefractBaseLayout.astro';
+import '../../styles/blog-pages.css';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<RefractBaseLayout title="Blog | Refract website" description="The Refract website blog.">
-	<h1>Blog</h1>
-	<p><a href="/rss.xml" data-astro-reload>Subscribe to the RSS feed</a></p>
-	<ul>
+<RefractBaseLayout
+	title="Blog | Refract website"
+	description="The Refract website blog."
+	pageClass="blog-shell"
+>
+	<LightFieldHero
+		className="blog-hero"
+		primary="#7aa8ff"
+		secondary="#d08bff"
+	>
+		<p class="eyebrow">The blog</p>
+		<h1>Notes from the work.</h1>
+		<p class="blog-hero__lead">Ideas, process, and the small details behind Refract.</p>
+	</LightFieldHero>
+
+	<div class="blog-index__bar">
+		<p>Writing from Refract.</p>
+		<a href="/rss.xml" data-astro-reload>Subscribe to the RSS feed</a>
+	</div>
+	<ul class="blog-list">
 		{
 			posts.map((post) => (
 				<li>

@@ -1,12 +1,22 @@
 ---
+import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import '../styles/blog-pages.css';
 ---
 
 <RefractBaseLayout
 	title="Page not found"
 	description="The requested Refract page could not be found."
+	pageClass="not-found-shell"
 >
-	<h1>Page not found</h1>
-	<p>This page does not exist.</p>
-	<p><a href="/">Return to Refract</a></p>
+	<LightFieldHero
+		className="not-found-hero"
+		primary="#ff9dcd"
+		secondary="#99a9ff"
+	>
+		<p class="eyebrow">404</p>
+		<h1>Page not found</h1>
+		<p class="not-found-hero__lead">This page does not exist.</p>
+		<p><a class="not-found-hero__link" href="/">Return to Refract <span aria-hidden="true">→</span></a></p>
+	</LightFieldHero>
 </RefractBaseLayout>

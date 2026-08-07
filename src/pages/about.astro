@@ -1,5 +1,6 @@
 ---
 import SocialLinks from '../components/SocialLinks.astro';
+import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
 import '../styles/info-pages.css';
 ---
@@ -11,14 +12,19 @@ import '../styles/info-pages.css';
 	footerVariant="compact"
 >
 	<div class="info-page about-page">
-		<section class="info-hero info-hero--about" aria-labelledby="about-title">
+		<LightFieldHero
+			className="info-hero info-hero--about"
+			primary="#c0ff70"
+			secondary="#5fd3ff"
+			labelledBy="about-title"
+		>
 			<p class="eyebrow">About</p>
 			<h1 id="about-title">Small by choice.<br />Thoughtful by default.</h1>
 			<p class="info-hero__lead">
 				The Refract Co. is an independent product brand making useful software with
 				care, clarity, and respect for the people using it.
 			</p>
-		</section>
+		</LightFieldHero>
 
 		<section class="about-story" aria-labelledby="about-story-title">
 			<div>

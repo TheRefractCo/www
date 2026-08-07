@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import paperWordmark from '../assets/brand/paper-wordmark.svg';
 import paperOverview from '../assets/projects/paper/paper-overview.png';
+import LightFieldHero from '../components/LightFieldHero.astro';
 import PaperActions from '../components/PaperActions.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
 import '../styles/product-pages.css';
@@ -13,7 +14,12 @@ import '../styles/product-pages.css';
 	pageClass="wide-page home-shell"
 >
 	<div class="home-page">
-		<section class="home-hero" aria-labelledby="home-title">
+		<LightFieldHero
+			className="home-hero"
+			primary="#5ee7ff"
+			secondary="#9f7bff"
+			labelledBy="home-title"
+		>
 			<div class="home-hero__content">
 				<h1 id="home-title">Thoughtful software,<br />made to feel at home.</h1>
 				<p class="home-hero__lead">
@@ -30,7 +36,7 @@ import '../styles/product-pages.css';
 				<span>See what we make</span>
 				<b aria-hidden="true">↓</b>
 			</a>
-		</section>
+		</LightFieldHero>
 
 		<section id="projects-preview" class="home-projects" aria-labelledby="home-projects-title">
 			<header class="home-projects__header">
