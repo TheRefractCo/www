@@ -1,0 +1,72 @@
+---
+interface Props {
+	title: string;
+	label: string;
+	className?: string;
+}
+
+const { title, label, className } = Astro.props;
+---
+
+<section class:list={['snap-carousel', className]} aria-label={label} data-snap-carousel>
+	<header class="snap-carousel__header">
+		<h3>{title}</h3>
+		<div class="snap-carousel__controls" aria-label={`${label} controls`}>
+			<button
+				type="button"
+				data-carousel-back
+				data-analytics-event="carousel_control"
+				data-analytics-carousel={label}
+				data-analytics-direction="previous"
+				aria-label={`Previous item in ${label}`}
+			>
+				←
+			</button>
+			<button
+				type="button"
+				data-carousel-next
+				data-analytics-event="carousel_control"
+				data-analytics-carousel={label}
+				data-analytics-direction="next"
+				aria-label={`Next item in ${label}`}
+			>
+				→
+			</button>
+		</div>
+	</header>
+	<div class="snap-carousel__rail" data-carousel-rail tabindex="0">
+		<slot />
+	</div>
+	<noscript>
+		<p class="snap-carousel__noscript">Swipe on touch, or horizontally scroll, to see every item.</p>
+	</noscript>
+</section>
+
+<script>
+	const initializeCarousels = () => {
+		document.querySelectorAll<HTMLElement>('[data-snap-carousel]').forEach((carousel) => {
+			if (carousel.dataset.carouselReady === 'true') return;
+
+			const rail = carousel.querySelector<HTMLElement>('[data-carousel-rail]');
+			const backButton = carousel.querySelector<HTMLButtonElement>('[data-carousel-back]');
+			const nextButton = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
+			if (!rail || !backButton || !nextButton) return;
+
+			const move = (direction: number) => {
+				rail.scrollBy({ left: rail.clientWidth * 0.82 * direction, behavior: 'smooth' });
+			};
+
+			backButton.addEventListener('click', () => move(-1));
+			nextButton.addEventListener('click', () => move(1));
+			carousel.dataset.carouselReady = 'true';
+			carousel.classList.add('snap-carousel--enhanced');
+		});
+	};
+
+	const windowWithCarouselSetup = window as Window & { refractCarouselSetup?: boolean };
+	if (!windowWithCarouselSetup.refractCarouselSetup) {
+		document.addEventListener('astro:page-load', initializeCarousels);
+		windowWithCarouselSetup.refractCarouselSetup = true;
+	}
+	initializeCarousels();
+</script>

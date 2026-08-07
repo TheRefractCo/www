@@ -1,0 +1,49 @@
+---
+import { analyticsConfig } from '../config/analytics';
+
+const clientConfig = {
+	consentMode: analyticsConfig.consentMode,
+	consentStorageKey: analyticsConfig.consentStorageKey,
+	manualPageViews: analyticsConfig.measurements.length > 1,
+	measurements: analyticsConfig.measurements,
+};
+---
+
+{
+	analyticsConfig.enabled && (
+		<>
+			<script
+				id="refract-analytics-config"
+				type="application/json"
+				is:inline
+				set:html={JSON.stringify(clientConfig)}
+			></script>
+
+			<aside
+				class="analytics-consent"
+				data-analytics-consent
+				aria-labelledby="analytics-consent-title"
+				hidden
+			>
+				<div class="analytics-consent__copy">
+					<p class="analytics-consent__eyebrow">A small, optional signal</p>
+					<h2 id="analytics-consent-title">Help us understand what works?</h2>
+					<p data-analytics-consent-message>
+						If you allow it, Google Analytics will tell us which pages are useful and whether
+						people find Paper. It stays off until you say yes. <a href="/privacy/#website-analytics">
+							Privacy details
+						</a>
+					</p>
+				</div>
+				<div class="analytics-consent__actions">
+					<button type="button" data-analytics-choice="granted">Allow analytics</button>
+					<button type="button" data-analytics-choice="denied">No thanks</button>
+				</div>
+			</aside>
+
+			<script>
+				import '../scripts/analytics';
+			</script>
+		</>
+	)
+}

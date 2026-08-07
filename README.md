@@ -10,6 +10,9 @@ Features:
 - ✅ Sitemap support
 - ✅ RSS Feed support
 - ✅ Markdown & MDX support
+- ✅ Optional, consent-based Google Analytics with route-level configuration
+
+See [the Google Analytics quick guide](docs/google-analytics.md) for deployment variables, privacy settings, verification, events, and a beginner reporting walkthrough.
 
 ## 🚀 Project Structure
 

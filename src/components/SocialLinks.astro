@@ -1,0 +1,52 @@
+---
+import { siGithub, siX } from 'simple-icons';
+
+interface Props {
+	className?: string;
+}
+
+const { className } = Astro.props;
+const analyticsLocation = className?.includes('footer') ? 'footer' : 'page';
+
+const socials = [
+	{
+		name: 'X',
+		handle: '@TheRefractCo',
+		href: 'https://x.com/TheRefractCo',
+		icon: siX,
+		className: 'social-link--x',
+	},
+	{
+		name: 'GitHub',
+		handle: 'TheRefractCo',
+		href: 'https://github.com/TheRefractCo',
+		icon: siGithub,
+		className: 'social-link--github',
+	},
+];
+---
+
+<div class:list={['social-links', className]} aria-label="Refract on social media">
+	{
+			socials.map(({ name, handle, href, icon, className: socialClass }) => (
+			<a
+				class:list={['social-link', socialClass]}
+				href={href}
+				data-analytics-event="social_click"
+				data-analytics-network={name.toLowerCase()}
+				data-analytics-location={analyticsLocation}
+			>
+				<span class="social-link__icon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" role="img">
+						<path d={icon.path} />
+					</svg>
+				</span>
+				<span class="social-link__copy">
+					<strong>{name}</strong>
+					<small>{handle}</small>
+				</span>
+				<span class="social-link__arrow" aria-hidden="true">↗</span>
+			</a>
+		))
+	}
+</div>

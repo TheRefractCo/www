@@ -1,0 +1,58 @@
+---
+import CopyToast from '../components/CopyToast.astro';
+import EmailCard from '../components/EmailCard.astro';
+import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import '../styles/info-pages.css';
+---
+
+<RefractBaseLayout
+	title="Contact | The Refract Co."
+	description="Contact The Refract Co. for general questions, product support, or privacy requests."
+	pageClass="contact-shell"
+	footerVariant="compact"
+>
+	<div class="info-page contact-page">
+		<section class="info-hero info-hero--contact" aria-labelledby="contact-title">
+			<p class="eyebrow">Contact</p>
+			<h1 id="contact-title">Let’s get your message<br />to the right place.</h1>
+			<p class="info-hero__lead">
+				Choose an inbox below. You can open your mail app or copy the address in one click.
+			</p>
+		</section>
+
+		<div class="email-list" aria-label="Refract email addresses">
+			<EmailCard
+				id="general"
+				label="General"
+				description="Ideas, partnerships, press, or anything that doesn’t fit elsewhere."
+				encodedAddress="aGV5QHJlZnJhY3QuZnlp"
+				tone="blue"
+			/>
+			<EmailCard
+				id="support"
+				label="Product support"
+				description="Tell us which Refract product you’re using and what happened."
+				encodedAddress="c3VwcG9ydEByZWZyYWN0LmZ5aQ=="
+				tone="violet"
+			/>
+			<EmailCard
+				id="privacy"
+				label="Privacy"
+				description="Questions about your information, or requests to access, correct, or delete it."
+				encodedAddress="cHJpdmFjeUByZWZyYWN0LmZ5aQ=="
+				tone="amber"
+			/>
+		</div>
+
+		<section class="page-social-panel" aria-labelledby="contact-social-title">
+			<div class="page-social-panel__heading">
+				<p class="eyebrow">Elsewhere</p>
+				<h2 id="contact-social-title">Follow the work.</h2>
+			</div>
+			<SocialLinks className="page-social-links" />
+		</section>
+	</div>
+
+	<CopyToast />
+</RefractBaseLayout>

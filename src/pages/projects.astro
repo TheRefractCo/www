@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import paperWordmark from '../assets/brand/paper-wordmark.svg';
+import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
+import siteContact from '../assets/projects/site/site-contact.png';
+import siteHome from '../assets/projects/site/site-home.png';
+import sitePrivacy from '../assets/projects/site/site-privacy.png';
+import PaperActions from '../components/PaperActions.astro';
+import PaperScreenshotRail from '../components/PaperScreenshotRail.astro';
+import SnapCarousel from '../components/SnapCarousel.astro';
+import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import '../styles/product-pages.css';
+---
+
+<RefractBaseLayout
+	title="Projects | The Refract Co."
+	description="Explore Paper and the small, carefully made projects from The Refract Co."
+	pageClass="wide-page projects-shell"
+>
+	<div class="projects-page">
+		<section class="projects-intro" aria-labelledby="projects-title">
+			<p class="product-kicker">The work</p>
+			<h1 id="projects-title">Things we make<br />and care about.</h1>
+			<p>
+				Independent software with a point of view: useful first, considered throughout, and never
+				busier than it needs to be.
+			</p>
+		</section>
+
+		<article id="paper" class="project-feature project-feature--paper">
+			<header class="project-feature__header">
+				<div class="project-feature__identity">
+					<p class="project-index">01 / Windows app</p>
+					<img class="project-paper-logo" src={paperWordmark.src} alt="Paper" />
+				</div>
+				<div class="project-feature__copy paper-type">
+					<h2>The final chapter in reading apps.</h2>
+					<p>
+						Paper brings PDFs, e-books, notes, and natural Windows Ink annotation into one calm,
+						native reading space. Your library feels less like a file manager and more like somewhere
+						you will want to return to.
+					</p>
+				</div>
+			</header>
+
+			<PaperActions campaign="rf-site-projects" />
+			<PaperScreenshotRail title="Swipe through Paper" className="project-paper-carousel" />
+		</article>
+
+		<article id="refract-website" class="project-feature project-feature--website">
+			<header class="project-feature__header">
+				<div class="project-feature__identity">
+					<p class="project-index">02 / The web</p>
+					<img class="project-refract-logo" src={refractWordmark.src} alt="Refract" />
+				</div>
+				<div class="project-feature__copy">
+					<h2>A small home for the work.</h2>
+					<p>
+						refract.fyi is deliberately direct: a fast, static place for our products, writing, and
+						policies. No account, only optional analytics, and no design system fighting for attention.
+					</p>
+				</div>
+			</header>
+
+			<div class="website-actions">
+				<a class="round-action round-action--light" href="/">Visit the homepage <span aria-hidden="true">↗</span></a>
+				<a class="round-action round-action--outline-light" href="/blog/">Read the blog <span aria-hidden="true">→</span></a>
+				<a class="round-action round-action--outline-light" href="/about/">About Refract <span aria-hidden="true">→</span></a>
+			</div>
+
+			<SnapCarousel title="A few corners of the site" label="Website page previews" className="website-carousel">
+				<figure class="website-screenshot">
+					<a href="/">
+						<Image src={siteHome} alt="The Refract Co. homepage" loading="lazy" quality={86} />
+					</a>
+					<figcaption>Home — the front door</figcaption>
+				</figure>
+				<figure class="website-screenshot">
+					<a href="/privacy/">
+						<Image src={sitePrivacy} alt="The Refract Co. privacy page" loading="lazy" quality={86} />
+					</a>
+					<figcaption>Privacy — clear choices in plain English</figcaption>
+				</figure>
+				<figure class="website-screenshot">
+					<a href="/contact/">
+						<Image src={siteContact} alt="The Refract Co. contact page" loading="lazy" quality={86} />
+					</a>
+					<figcaption>Contact — three inboxes, zero forms</figcaption>
+				</figure>
+			</SnapCarousel>
+		</article>
+	</div>
+</RefractBaseLayout>

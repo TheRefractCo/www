@@ -1,14 +1,21 @@
 ---
 import HeaderLink from './HeaderLink.astro';
+import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">Refract website</a></h2>
+		<h2>
+			<a class="site-brand" href="/">
+				<img class="site-brand__wordmark" src={refractWordmark.src} alt="Refract" />
+			</a>
+		</h2>
 		<div>
 			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/projects/">Projects</HeaderLink>
+			<HeaderLink href="/blog/">Blog</HeaderLink>
+			<HeaderLink href="/about/">About</HeaderLink>
+			<HeaderLink href="/contact/">Contact</HeaderLink>
 		</div>
 	</nav>
 </header>

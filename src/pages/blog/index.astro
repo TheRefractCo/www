@@ -11,7 +11,7 @@ const posts = (await getCollection('blog')).sort(
 
 <RefractBaseLayout title="Blog | Refract website" description="The Refract website blog.">
 	<h1>Blog</h1>
-	<p><a href="/rss.xml">Subscribe to the RSS feed</a></p>
+	<p><a href="/rss.xml" data-astro-reload>Subscribe to the RSS feed</a></p>
 	<ul>
 		{
 			posts.map((post) => (

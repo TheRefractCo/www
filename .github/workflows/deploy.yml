@@ -22,6 +22,10 @@ jobs:
         uses: actions/checkout@v7
       - name: Install, build, and upload your site
         uses: withastro/action@v6
+        env:
+          GOOGLE_ANALYTICS_ID: ${{ vars.GOOGLE_ANALYTICS_ID }}
+          GOOGLE_ANALYTICS_PAPER_ID: ${{ vars.GOOGLE_ANALYTICS_PAPER_ID }}
+          ANALYTICS_CONSENT_MODE: ${{ vars.ANALYTICS_CONSENT_MODE }}
         # with:
         # path: . # The root location of your Astro project inside the repository. (optional)
         # node-version: 24 # The specific version of Node that should be used to build your site. Defaults to 24. (optional)

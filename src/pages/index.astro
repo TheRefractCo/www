@@ -1,9 +1,77 @@
 ---
+import { Image } from 'astro:assets';
+import paperWordmark from '../assets/brand/paper-wordmark.svg';
+import paperOverview from '../assets/projects/paper/paper-overview.png';
+import PaperActions from '../components/PaperActions.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import '../styles/product-pages.css';
 ---
 
-<RefractBaseLayout title="Refract website" description="The Refract website.">
-	<h1>Refract website</h1>
-	<p>Welcome to the Refract website.</p>
-	<p><a href="/blog/">Read the blog.</a></p>
+<RefractBaseLayout
+	title="The Refract Co. | Thoughtful software"
+	description="The Refract Co. creates thoughtful, well-designed apps, tools, and digital experiences."
+	pageClass="wide-page home-shell"
+>
+	<div class="home-page">
+		<section class="home-hero" aria-labelledby="home-title">
+			<div class="home-hero__content">
+				<h1 id="home-title">Thoughtful software,<br />made to feel at home.</h1>
+				<p class="home-hero__lead">
+					Refract creates carefully designed apps and digital experiences that stay useful,
+					pleasant, and respectful of your attention.
+				</p>
+				<div class="home-hero__links">
+					<a class="text-link" href="/about/">About Refract <span aria-hidden="true">→</span></a>
+					<a class="text-link" href="/blog/">Read the blog <span aria-hidden="true">→</span></a>
+				</div>
+			</div>
+
+			<a class="scroll-cue" href="#projects-preview" aria-label="Scroll to featured projects">
+				<span>See what we make</span>
+				<b aria-hidden="true">↓</b>
+			</a>
+		</section>
+
+		<section id="projects-preview" class="home-projects" aria-labelledby="home-projects-title">
+			<header class="home-projects__header">
+				<div>
+					<p class="product-kicker">Selected projects</p>
+					<h2 id="home-projects-title">Made with care.<br />Kept intentionally small.</h2>
+				</div>
+				<a class="text-link" href="/projects/">All projects <span aria-hidden="true">→</span></a>
+			</header>
+
+			<article class="home-project home-project--paper">
+				<div class="home-project__copy">
+					<img class="home-project__paper-logo" src={paperWordmark.src} alt="Paper" />
+					<p>A calm, native Windows home for your PDFs, e-books, notes, and annotations.</p>
+					<PaperActions campaign="rf-site-home" />
+				</div>
+				<div class="home-project__visual">
+					<Image
+						src={paperOverview}
+						alt="Paper’s library, reader, notes, and document formats on Windows"
+						loading="lazy"
+						quality={84}
+					/>
+				</div>
+			</article>
+
+			<article class="home-project home-project--site">
+				<div class="home-project__copy">
+					<p class="product-kicker">This website</p>
+					<h3>A quieter home on the web.</h3>
+					<p>Fast, static, and focused on the work—with no accounts and only optional, consent-based analytics.</p>
+					<a class="text-link text-link--light" href="/projects/#refract-website">
+						How it was made <span aria-hidden="true">→</span>
+					</a>
+				</div>
+				<div class="home-site-preview" aria-hidden="true">
+					<span>refract.fyi</span>
+					<strong>The Refract Co.</strong>
+					<i></i><i></i><i></i>
+				</div>
+			</article>
+		</section>
+	</div>
 </RefractBaseLayout>

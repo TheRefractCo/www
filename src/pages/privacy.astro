@@ -1,0 +1,324 @@
+---
+import CopyToast from "../components/CopyToast.astro";
+import EmailCard from "../components/EmailCard.astro";
+import RefractBaseLayout from "../layouts/RefractBaseLayout.astro";
+import "../styles/info-pages.css";
+---
+
+<RefractBaseLayout
+  title="Privacy | The Refract Co."
+  description="Plain-English privacy information for refract.fyi and the Paper app by The Refract Co."
+>
+  <div class="info-page privacy-page">
+    <section
+      class="info-hero info-hero--privacy"
+      aria-labelledby="privacy-title"
+    >
+      <p class="eyebrow">Privacy</p>
+      <h1 id="privacy-title">Your information<br />stays yours.</h1>
+      <p class="info-hero__lead">
+        No legalese. Just a clear account of what this website and Paper
+        collect, why they collect it, and the choices you have.
+      </p>
+    </section>
+
+    <div class="privacy-principles" aria-label="Privacy principles">
+      <div>
+        <span aria-hidden="true">01</span>
+        <strong>No data sales</strong>
+        <p>
+          We do not sell your personal information or use it for advertising.
+        </p>
+      </div>
+      <div>
+        <span aria-hidden="true">02</span>
+        <strong>Clear choices</strong>
+        <p>Optional features are explained before you choose to use them.</p>
+      </div>
+      <div>
+        <span aria-hidden="true">03</span>
+        <strong>Privacy by default</strong>
+        <p>Paper works offline, without an account or analytics.</p>
+      </div>
+    </div>
+
+    <nav class="policy-nav" aria-label="Privacy policy sections">
+      <p>Choose a policy</p>
+      <a href="#website-policy">
+        <span>This website</span>
+        <small>refract.fyi</small>
+        <b aria-hidden="true">↓</b>
+      </a>
+      <a href="#paper-policy">
+        <span>Paper</span>
+        <small>The app</small>
+        <b aria-hidden="true">↓</b>
+      </a>
+    </nav>
+
+    <article
+      id="website-policy"
+      class="policy-document policy-document--website"
+    >
+      <header class="policy-document__header">
+        <div>
+          <p class="eyebrow">Website policy</p>
+          <h2>refract.fyi</h2>
+        </div>
+        <p class="policy-date">
+          Last updated<br /><strong>7 August 2026</strong>
+        </p>
+      </header>
+
+      <p class="policy-intro">
+        This notice covers <strong>refract.fyi</strong>, operated under The
+        Refract Co. brand. It does not replace privacy information for
+        individual Refract products.
+      </p>
+
+      <section class="policy-section">
+        <h3>What this website collects</h3>
+        <p>
+          This website does not provide accounts or contact forms. If you have
+          not allowed analytics, we do not load Google Analytics, set Google
+          Analytics cookies, or send analytics events to Google.
+        </p>
+        <p>
+          After you choose, your browser stores that choice locally so we can
+          remember it. This preference is necessary to respect your choice; it
+          is not used to identify you or measure your visit.
+        </p>
+      </section>
+
+      <section id="website-analytics" class="policy-section">
+        <h3>Optional website analytics</h3>
+        <p>
+          If you select <strong>Allow analytics</strong>, we use <strong
+            >Google Analytics 4</strong
+          > to understand visits in aggregate. It may set first-party cookies
+          such as <code>_ga</code> and <code>_ga_&lt;id&gt;</code> to distinguish
+          browsers and sessions.
+        </p>
+        <p>
+          We collect page views, general browser and device information,
+          approximate location, referral or campaign information, and a small
+          set of deliberate interactions: Paper Store and product links,
+          contact action types, social links, and carousel controls. We do not
+          send email addresses, message contents, document contents, or other
+          information you type into Google Analytics.
+        </p>
+        <p>
+          Advertising storage and advertising personalization stay disabled,
+          and our code disables Google Signals. We use analytics only to improve
+          this website and understand interest in our work—not for ads, user
+          profiles, or data sales. Google explains its handling in <a
+            href="https://policies.google.com/privacy">Google’s privacy policy</a
+          > and <a href="https://support.google.com/analytics/answer/6004245"
+            >Analytics data safeguards</a
+          >.
+        </p>
+      </section>
+
+      <section class="policy-section">
+        <h3>Your analytics choice</h3>
+        <p>
+          Our legal basis for optional analytics is your consent. Choosing <strong
+            >No thanks</strong
+          > has no effect on the site. You can change your choice at any time
+          with <strong>Analytics choices</strong> in the footer. Turning analytics
+          off refreshes the current page without Google, stops new analytics
+          events, and removes the Google Analytics cookies that this site can
+          access. Information already received is handled under the retention
+          rules below.
+        </p>
+        <p>
+          Google Analytics cookies can otherwise last for up to two years. We
+          use Google Analytics’ two-month user and event data-retention setting;
+          Google notes that this setting does not remove standard aggregated
+          reports on the same schedule. Your local consent choice remains until
+          you change it or clear this site’s browser storage.
+        </p>
+      </section>
+
+      <section class="policy-section">
+        <h3>When you email us</h3>
+        <p>
+          If you email us, we receive the information you choose to send, such
+          as your email address, message, and attachments. We use it to reply,
+          provide support, or handle your request, and keep it only for as long
+          as reasonably needed.
+        </p>
+      </section>
+
+      <section class="policy-section">
+        <h3>Hosting and external links</h3>
+        <p>
+          This website is hosted on GitHub Pages. GitHub may process technical
+          information needed to operate its hosting service. External websites
+          have their own privacy policies.
+        </p>
+      </section>
+
+      <section class="policy-section">
+        <h3>Your rights and changes</h3>
+        <p>
+          You may ask to access, correct, delete, restrict, or receive personal
+          information connected to this website, and you may object where that
+          right applies. You may withdraw consent at any time without affecting
+          earlier lawful processing. Use the <a href="/contact/#privacy"
+            >privacy inbox</a
+          > to make a request. You may also complain to your local data
+          protection authority. We will update this page if the way refract.fyi
+          handles information changes.
+        </p>
+      </section>
+    </article>
+
+    <article id="paper-policy" class="policy-document policy-document--paper">
+      <header class="policy-document__header">
+        <div>
+          <p class="eyebrow">Product policy</p>
+          <h2>Paper &amp; Refract</h2>
+        </div>
+        <p class="policy-date">
+          Last updated<br /><strong>29 April 2025</strong>
+        </p>
+      </header>
+
+      <p class="policy-intro">
+        At <strong>The Refract Co.</strong>, we care about your privacy. This
+        policy explains what we collect, why, and how it is handled—in plain
+        English, with no legalese.
+      </p>
+
+      <section class="policy-section">
+        <p class="policy-section__number" aria-hidden="true">01</p>
+        <div>
+          <h3>Accounts and sync</h3>
+          <p>
+            Right now, all your data in <strong>Paper</strong>—your library,
+            settings, and other app data—stays entirely on your device. In a
+            future version, we plan to introduce optional cloud syncing using <strong
+              >Firebase</strong
+            >, so you can access your books and settings across devices.
+          </p>
+          <p>
+            When this update happens, you will get a clear notification in the
+            app. We will not move anything to the cloud unless you agree.
+          </p>
+          <p>
+            We will use <strong>Firebase Auth</strong> to help you log in and <strong
+              >Firebase Firestore/Storage</strong
+            > to sync your content securely. Read more in{" "}
+            <a href="https://policies.google.com/privacy"
+              >Google’s privacy policy</a
+            >.
+          </p>
+        </div>
+      </section>
+
+      <section class="policy-section">
+        <p class="policy-section__number" aria-hidden="true">02</p>
+        <div>
+          <h3>Optional analytics</h3>
+          <p>
+            Analytics are entirely optional and can be disabled at any time. We
+            use
+            {" "}<strong>PostHog</strong> to understand how people use the app—for
+            example, which features are popular or which screens are used most often.
+            This helps us improve the experience.
+          </p>
+          <p>
+            We only collect anonymous, non-identifiable information. We do not
+            collect file names, file contents, or personal data. We do not know
+            what you read, and we will not try to find out. Read more about <a
+              href="https://posthog.com/privacy">PostHog’s privacy approach</a
+            >.
+          </p>
+        </div>
+      </section>
+
+      <section class="policy-section">
+        <p class="policy-section__number" aria-hidden="true">03</p>
+        <div>
+          <h3>Crash reporting</h3>
+          <p>
+            To fix bugs quickly, we use <strong>Sentry</strong> to log crash reports
+            and app errors. These reports may include technical details about what
+            caused the crash, but do not contain your personal files or identity.
+            Read <a href="https://sentry.io/privacy/">Sentry’s privacy policy</a
+            >.
+          </p>
+        </div>
+      </section>
+
+      <section class="policy-section">
+        <p class="policy-section__number" aria-hidden="true">04</p>
+        <div>
+          <h3>Platform data collection</h3>
+          <p>
+            If you are on <strong>Windows</strong>, Microsoft might collect
+            crash reports separately through Windows Error Reporting, which is
+            built into Windows. You can turn it off in your Windows privacy
+            settings.
+          </p>
+        </div>
+      </section>
+
+      <section class="policy-section">
+        <p class="policy-section__number" aria-hidden="true">05</p>
+        <div>
+          <h3>Your control</h3>
+          <p>
+            You can use Paper completely offline. No account or analytics are
+            required.
+          </p>
+          <p>
+            When we introduce new features such as cloud sync or login, they
+            will be optional and explained clearly before you choose to use
+            them.
+          </p>
+          <p>
+            <strong>We do not sell your data. We do not track you.</strong> We only
+            collect what we need to improve Paper, and we always want you to know
+            what is going on.
+          </p>
+        </div>
+      </section>
+
+      <section class="policy-section">
+        <p class="policy-section__number" aria-hidden="true">06</p>
+        <div>
+          <h3>Your rights</h3>
+          <p>
+            We follow the GDPR (General Data Protection Regulation) even if you
+            are not in the EU. We believe privacy is a right everywhere. This
+            means:
+          </p>
+          <ul>
+            <li>We only collect data when it is necessary and explained.</li>
+            <li>You can ask to see, delete, or correct your data.</li>
+            <li>We do not use your data for ads or sell it to anyone.</li>
+          </ul>
+        </div>
+      </section>
+    </article>
+    <div class="policy-contact">
+      <p class="eyebrow">Questions or requests</p>
+      <h3>Talk to a person.</h3>
+      <p>
+        If you have a privacy question or want to make a request, reach us
+        directly.
+      </p>
+      <EmailCard
+        id="paper-privacy-contact"
+        label="Privacy"
+        description="For Paper, refract.fyi, and other Refract privacy questions."
+        encodedAddress="cHJpdmFjeUByZWZyYWN0LmZ5aQ=="
+        tone="amber"
+      />
+    </div>
+  </div>
+
+  <CopyToast />
+</RefractBaseLayout>

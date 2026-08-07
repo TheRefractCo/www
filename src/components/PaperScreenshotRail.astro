@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import paperAnnotate from '../assets/projects/paper/paper-annotate.png';
+import paperLibrary from '../assets/projects/paper/paper-library.png';
+import paperOverview from '../assets/projects/paper/paper-overview.png';
+import paperRoadmap from '../assets/projects/paper/paper-roadmap.png';
+import SnapCarousel from './SnapCarousel.astro';
+
+interface Props {
+	title?: string;
+	className?: string;
+}
+
+const { title = 'See Paper in action', className } = Astro.props;
+const screenshots = [
+	{
+		src: paperOverview,
+		alt: 'A montage of the Paper app, its logo, library, reader, notes, and settings.',
+		caption: 'A reading home built for Windows.',
+	},
+	{
+		src: paperLibrary,
+		alt: 'The Paper library showing imported PDF and EPUB documents.',
+		caption: 'PDFs and e-books, together in one library.',
+	},
+	{
+		src: paperAnnotate,
+		alt: 'A PDF open in Paper with handwritten annotations made using Windows Ink.',
+		caption: 'Read, highlight, and write directly on your documents.',
+	},
+	{
+		src: paperRoadmap,
+		alt: 'Paper roadmap artwork for AI summaries, Windows Hello library lock, and news.',
+		caption: 'A thoughtful roadmap for what comes next.',
+	},
+];
+---
+
+<SnapCarousel title={title} label="Paper screenshots" className={className}>
+	{
+		screenshots.map((screenshot) => (
+			<figure class="paper-screenshot">
+				<Image
+					src={screenshot.src}
+					alt={screenshot.alt}
+					loading="lazy"
+					quality={88}
+				/>
+				<figcaption>{screenshot.caption}</figcaption>
+			</figure>
+		))
+	}
+</SnapCarousel>

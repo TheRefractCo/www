@@ -1,0 +1,143 @@
+---
+interface Props {
+	id: string;
+	label: string;
+	description: string;
+	encodedAddress: string;
+	tone?: 'blue' | 'violet' | 'amber';
+}
+
+const { id, label, description, encodedAddress, tone = 'blue' } = Astro.props;
+const analyticsLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+---
+
+<article
+	id={id}
+	class={`email-card email-card--${tone}`}
+	data-email-card
+	data-encoded-address={encodedAddress}
+>
+	<div class="email-card__heading">
+		<span class="email-card__mark" aria-hidden="true">@</span>
+		<div>
+			<p class="email-card__label">{label}</p>
+			<p class="email-card__address" data-email-address>Protected address</p>
+		</div>
+	</div>
+
+	<p class="email-card__description">{description}</p>
+
+	<div class="email-card__actions">
+		<button
+			class="action-button action-button--primary"
+			type="button"
+			data-email-compose
+			data-analytics-event="contact_action"
+			data-analytics-action="open_mail"
+			data-analytics-label={analyticsLabel}
+			aria-label={`Open ${label} email in your mail app`}
+			disabled
+		>
+			Open mail <span aria-hidden="true">↗</span>
+		</button>
+		<button
+			class="action-button action-button--secondary"
+			type="button"
+			data-email-copy
+			data-analytics-event="contact_action"
+			data-analytics-action="copy_address"
+			data-analytics-label={analyticsLabel}
+			aria-label={`Copy ${label} email address`}
+			disabled
+		>
+			Copy address
+		</button>
+	</div>
+
+	<noscript>
+		<p class="email-card__noscript">Enable JavaScript to reveal this email address.</p>
+	</noscript>
+</article>
+
+<script>
+	const decodeEmailAddress = (value: string) => window.atob(value);
+
+	const showCopyNotice = (message: string) => {
+		const notice = document.querySelector<HTMLElement>('[data-copy-toast]');
+		const noticeText = notice?.querySelector<HTMLElement>('[data-copy-toast-text]');
+		if (!notice || !noticeText) return;
+
+		const windowWithTimer = window as Window & { refractCopyToastTimer?: number };
+		if (windowWithTimer.refractCopyToastTimer) {
+			window.clearTimeout(windowWithTimer.refractCopyToastTimer);
+		}
+
+		noticeText.textContent = message;
+		notice.classList.add('copy-toast--visible');
+		windowWithTimer.refractCopyToastTimer = window.setTimeout(() => {
+			notice.classList.remove('copy-toast--visible');
+		}, 2600);
+	};
+
+	const copyAddress = async (address: string) => {
+		if (navigator.clipboard && window.isSecureContext) {
+			await navigator.clipboard.writeText(address);
+			return;
+		}
+
+		const temporaryInput = document.createElement('textarea');
+		temporaryInput.value = address;
+		temporaryInput.setAttribute('readonly', '');
+		temporaryInput.style.position = 'fixed';
+		temporaryInput.style.opacity = '0';
+		document.body.append(temporaryInput);
+		temporaryInput.select();
+		const didCopy = document.execCommand('copy');
+		temporaryInput.remove();
+
+		if (!didCopy) throw new Error('Copy command was unavailable.');
+	};
+
+	const initializeEmailCards = () => {
+		document.querySelectorAll<HTMLElement>('[data-email-card]').forEach((card) => {
+			if (card.dataset.emailReady === 'true') return;
+
+			const encodedAddress = card.dataset.encodedAddress;
+			const addressElement = card.querySelector<HTMLElement>('[data-email-address]');
+			const composeButton = card.querySelector<HTMLButtonElement>('[data-email-compose]');
+			const copyButton = card.querySelector<HTMLButtonElement>('[data-email-copy]');
+			if (!encodedAddress || !addressElement || !composeButton || !copyButton) return;
+
+			const address = decodeEmailAddress(encodedAddress);
+			addressElement.textContent = address;
+			composeButton.disabled = false;
+			copyButton.disabled = false;
+			delete card.dataset.encodedAddress;
+			card.dataset.emailReady = 'true';
+
+			composeButton.addEventListener('click', () => {
+				window.location.href = `mailto:${address}`;
+			});
+
+			copyButton.addEventListener('click', async () => {
+				try {
+					await copyAddress(address);
+					copyButton.textContent = 'Copied ✓';
+					showCopyNotice(`${address} copied to your clipboard.`);
+					window.setTimeout(() => {
+						copyButton.textContent = 'Copy address';
+					}, 2200);
+				} catch {
+					showCopyNotice('Copy failed. Select the address and copy it manually.');
+				}
+			});
+		});
+	};
+
+	const windowWithEmailSetup = window as Window & { refractEmailSetup?: boolean };
+	if (!windowWithEmailSetup.refractEmailSetup) {
+		document.addEventListener('astro:page-load', initializeEmailCards);
+		windowWithEmailSetup.refractEmailSetup = true;
+	}
+	initializeEmailCards();
+</script>
