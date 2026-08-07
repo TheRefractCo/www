@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import { defaultLang } from '../../../../i18n/ui';
+import { getDocRouteId, getLangFromUrl, useTranslatedPath } from '../../../../i18n/utils';
+
+export async function getStaticPaths() {
+	const entries = (await getCollection('docs')).filter((entry) => entry.id.startsWith(`${defaultLang}/`));
+	return entries.map((entry) => ({
+		params: { slug: getDocRouteId(entry.id, defaultLang) },
+		props: { logicalId: getDocRouteId(entry.id, defaultLang) },
+	}));
+}
+
+const { logicalId } = Astro.props;
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+return Astro.redirect(useTranslatedPath(locale)(`paper/docs/${logicalId}`), 301);
+---

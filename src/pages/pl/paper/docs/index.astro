@@ -1,0 +1,6 @@
+---
+import { getLangFromUrl, useTranslatedPath } from '../../../../i18n/utils';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+return Astro.redirect(useTranslatedPath(locale)('paper/docs'), 301);
+---

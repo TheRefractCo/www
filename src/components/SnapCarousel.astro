@@ -1,4 +1,6 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
 interface Props {
 	title: string;
 	label: string;
@@ -6,19 +8,21 @@ interface Props {
 }
 
 const { title, label, className } = Astro.props;
+
+const t = useTranslations(getLangFromUrl(Astro.url, Astro.currentLocale));
 ---
 
 <section class:list={['snap-carousel', className]} aria-label={label} data-snap-carousel>
 	<header class="snap-carousel__header">
 		<h3>{title}</h3>
-		<div class="snap-carousel__controls" aria-label={`${label} controls`}>
+		<div class="snap-carousel__controls" aria-label={`${label} ${t('carousel.controls')}`}>
 			<button
 				type="button"
 				data-carousel-back
 				data-analytics-event="carousel_control"
 				data-analytics-carousel={label}
 				data-analytics-direction="previous"
-				aria-label={`Previous item in ${label}`}
+				aria-label={`${t('carousel.previous')} in ${label}`}
 			>
 				←
 			</button>
@@ -28,7 +32,7 @@ const { title, label, className } = Astro.props;
 				data-analytics-event="carousel_control"
 				data-analytics-carousel={label}
 				data-analytics-direction="next"
-				aria-label={`Next item in ${label}`}
+				aria-label={`${t('carousel.next')} in ${label}`}
 			>
 				→
 			</button>
@@ -38,7 +42,7 @@ const { title, label, className } = Astro.props;
 		<slot />
 	</div>
 	<noscript>
-		<p class="snap-carousel__noscript">Swipe on touch, or horizontally scroll, to see every item.</p>
+		<p class="snap-carousel__noscript">{t('carousel.noscript')}</p>
 	</noscript>
 </section>
 

@@ -1,0 +1,205 @@
+---
+import { ArrowLeft, ChevronRight, Menu, Search, X } from '@lucide/astro';
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+import '../styles/product-pages.css';
+import '../styles/paper-docs.css';
+import type { PaperDocsNavEntry } from '../types/paper-docs';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+	entries: PaperDocsNavEntry[];
+	currentId?: string;
+	locale?: Locale;
+}
+
+const { entries, currentId, locale: requestedLocale } = Astro.props;
+const locale = requestedLocale ?? getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
+const localizedHref = useTranslatedPath(locale);
+const sortedEntries = [...entries].sort(
+	(a, b) => a.data.categoryOrder - b.data.categoryOrder || a.data.order - b.data.order,
+);
+const categories = [...new Set(sortedEntries.map((entry) => entry.id.split('/')[0]))].map((categoryId) => {
+	const categoryEntries = sortedEntries.filter((entry) => entry.id.split('/')[0] === categoryId);
+	const overview = categoryEntries.find((entry) => !entry.id.includes('/')) ?? categoryEntries[0];
+
+	return {
+		name: overview.data.category,
+		overview,
+		pages: categoryEntries.filter((entry) => entry.id !== overview.id),
+	};
+});
+
+const docsHomeHref = localizedHref('paper/docs');
+const paperHref = localizedHref('paper');
+const docHref = (id: string) => localizedHref(`paper/docs/${id}`);
+---
+
+<div class="paper-docs" data-paper-docs data-docs-locale={locale} data-search-one={t('docs.search.one')} data-search-many={t('docs.search.many')}>
+	<button
+		class="paper-docs__menu-toggle"
+		type="button"
+		aria-controls="paper-docs-sidebar"
+		aria-expanded="false"
+		data-docs-menu-toggle
+	>
+		<Menu size={21} strokeWidth={1.8} aria-hidden="true" />
+		<span>{t('docs.shell.menu')}</span>
+	</button>
+
+	<div class="paper-docs__backdrop" data-docs-backdrop></div>
+
+	<aside class="paper-docs__sidebar" id="paper-docs-sidebar" data-docs-sidebar aria-label={t('docs.shell.title')}>
+		<div class="paper-docs__sidebar-heading">
+			<div>
+				<p class="paper-kicker">{t('docs.shell.kicker')}</p>
+				<strong>{t('docs.shell.title')}</strong>
+			</div>
+			<button class="paper-docs__close" type="button" aria-label={t('docs.shell.close')} data-docs-close>
+				<X size={19} strokeWidth={1.8} aria-hidden="true" />
+			</button>
+		</div>
+
+		<form class="paper-docs__search" role="search" data-docs-search>
+			<label for="paper-docs-search-input">{t('docs.shell.searchLabel')}</label>
+			<div class="paper-docs__search-field">
+				<Search size={17} strokeWidth={1.8} aria-hidden="true" />
+				<input
+					id="paper-docs-search-input"
+					name="q"
+					type="search"
+					placeholder={t('docs.shell.searchPlaceholder')}
+					autocomplete="off"
+					data-docs-search-input
+				/>
+			</div>
+			<p class="paper-docs__search-status" data-docs-search-status aria-live="polite"></p>
+		</form>
+
+		<nav class="paper-docs__nav" data-docs-nav>
+			<a class="paper-docs__all-link" href={docsHomeHref} class:list={{ 'is-active': !currentId }}>
+				<span>{t('docs.shell.home')}</span>
+				<ChevronRight size={16} strokeWidth={1.8} aria-hidden="true" />
+			</a>
+
+			{categories.map((category) => (
+				<section class="paper-docs__category">
+					<a
+						class="paper-docs__category-link"
+						href={docHref(category.overview.id)}
+						class:list={{ 'is-active': currentId === category.overview.id }}
+					>
+						<span>{category.name}</span>
+						<ChevronRight size={16} strokeWidth={1.8} aria-hidden="true" />
+					</a>
+					{category.pages.length > 0 && (
+						<ul>
+							{category.pages.map((entry) => (
+								<li>
+									<a
+										href={docHref(entry.id)}
+										class:list={{ 'is-active': currentId === entry.id }}
+										aria-current={currentId === entry.id ? 'page' : undefined}
+									>
+										{entry.data.title}
+									</a>
+								</li>
+							))}
+						</ul>
+					)}
+				</section>
+			))}
+		</nav>
+
+		<div class="paper-docs__search-results" data-docs-search-results hidden>
+			<p class="paper-docs__search-results-label">{t('docs.shell.results')}</p>
+			<ul>
+				{sortedEntries.map((entry) => (
+					<li data-docs-search-item data-search-text={`${entry.data.title} ${entry.data.description} ${entry.data.category}`}>
+						<a href={docHref(entry.id)}>
+							<span>{entry.data.title}</span>
+							<small>{entry.data.category}</small>
+						</a>
+					</li>
+				))}
+			</ul>
+			<p class="paper-docs__no-results" data-docs-no-results hidden>{t('docs.shell.noResults')}</p>
+		</div>
+
+		<a class="paper-docs__back-link" href={paperHref}>
+			<ArrowLeft size={16} strokeWidth={1.8} aria-hidden="true" />
+			{t('docs.shell.back')}
+		</a>
+	</aside>
+
+	<section class="paper-docs__main">
+		<slot />
+	</section>
+</div>
+
+<script>
+	const setupPaperDocs = () => {
+		const shell = document.querySelector<HTMLElement>('[data-paper-docs]');
+		if (!shell || shell.dataset.docsReady === 'true') return;
+		shell.dataset.docsReady = 'true';
+
+		const toggle = shell.querySelector<HTMLButtonElement>('[data-docs-menu-toggle]');
+		const sidebar = shell.querySelector<HTMLElement>('[data-docs-sidebar]');
+		const backdrop = shell.querySelector<HTMLElement>('[data-docs-backdrop]');
+		const closeButton = shell.querySelector<HTMLButtonElement>('[data-docs-close]');
+		const searchInput = shell.querySelector<HTMLInputElement>('[data-docs-search-input]');
+		const navigation = shell.querySelector<HTMLElement>('[data-docs-nav]');
+		const results = shell.querySelector<HTMLElement>('[data-docs-search-results]');
+		const searchStatus = shell.querySelector<HTMLElement>('[data-docs-search-status]');
+		const noResults = shell.querySelector<HTMLElement>('[data-docs-no-results]');
+		const searchItems = [...shell.querySelectorAll<HTMLElement>('[data-docs-search-item]')];
+		const oneResultLabel = shell.dataset.searchOne ?? 'page found';
+		const manyResultsLabel = shell.dataset.searchMany ?? 'pages found';
+
+		const setMenuOpen = (isOpen: boolean) => {
+			shell.toggleAttribute('data-nav-open', isOpen);
+			toggle?.setAttribute('aria-expanded', String(isOpen));
+			document.body.style.overflow = isOpen ? 'hidden' : '';
+		};
+
+		toggle?.addEventListener('click', () => setMenuOpen(!shell.hasAttribute('data-nav-open')));
+		backdrop?.addEventListener('click', () => setMenuOpen(false));
+		closeButton?.addEventListener('click', () => setMenuOpen(false));
+		sidebar?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenuOpen(false)));
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') setMenuOpen(false);
+		});
+
+		searchInput?.addEventListener('input', () => {
+			const query = searchInput.value.trim().toLowerCase();
+			const isSearching = query.length > 0;
+			let visibleCount = 0;
+
+			navigation?.toggleAttribute('hidden', isSearching);
+			results?.toggleAttribute('hidden', !isSearching);
+
+			searchItems.forEach((item) => {
+				const isMatch = !isSearching || (item.dataset.searchText ?? '').toLowerCase().includes(query);
+				item.hidden = !isMatch;
+				if (isMatch) visibleCount += 1;
+			});
+
+			if (searchStatus) {
+				searchStatus.textContent = isSearching
+					? `${visibleCount} ${visibleCount === 1 ? oneResultLabel : manyResultsLabel}`
+					: '';
+			}
+			if (noResults) noResults.hidden = !isSearching || visibleCount > 0;
+		});
+	};
+
+	const windowWithDocsSetup = window as Window & { paperDocsSetup?: boolean };
+	if (!windowWithDocsSetup.paperDocsSetup) {
+		document.addEventListener('astro:page-load', setupPaperDocs);
+		document.addEventListener('astro:before-preparation', () => {
+			document.body.style.overflow = '';
+		});
+		windowWithDocsSetup.paperDocsSetup = true;
+	}
+	setupPaperDocs();
+</script>

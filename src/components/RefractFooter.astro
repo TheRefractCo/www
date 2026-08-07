@@ -1,5 +1,7 @@
 ---
 import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+import LanguagePicker from './LanguagePicker.astro';
 import SocialLinks from './SocialLinks.astro';
 
 interface Props {
@@ -8,6 +10,9 @@ interface Props {
 
 const today = new Date();
 const { variant = 'default' } = Astro.props;
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
+const localizedHref = useTranslatedPath(locale);
 ---
 
 <footer class:list={['site-footer', `site-footer--${variant}`]}>
@@ -24,37 +29,38 @@ const { variant = 'default' } = Astro.props;
 			<div class="footer-directory">
 				<div class="footer-intro">
 					<img src={refractWordmark.src} alt="Refract" />
-					<p>Thoughtful software, made independently and with care.</p>
+					<p>{t('footer.tagline')}</p>
 				</div>
 
-				<nav class="footer-nav" aria-label="Footer navigation">
+				<nav class="footer-nav" aria-label={t('footer.site')}>
 					<section>
-						<h2>Explore</h2>
-						<a href="/projects/">Projects</a>
-						<a href="/paper/">Paper</a>
-						<a href="/blog/">Blog</a>
+						<h2>{t('footer.explore')}</h2>
+						<a href={localizedHref('projects')}>{t('nav.projects')}</a>
+						<a href={localizedHref('paper')}>Paper</a>
+						<a href={localizedHref('blog')}>{t('nav.blog')}</a>
 					</section>
 					<section>
-						<h2>Company</h2>
-						<a href="/about/">About</a>
-						<a href="/contact/">Contact</a>
-						<a href="/privacy/">Privacy</a>
+						<h2>{t('footer.company')}</h2>
+						<a href={localizedHref('about')}>{t('nav.about')}</a>
+						<a href={localizedHref('contact')}>{t('nav.contact')}</a>
+						<a href={localizedHref('privacy')}>{t('footer.privacy')}</a>
 						<button class="analytics-settings" type="button" data-analytics-settings hidden>
-							Analytics choices
+							{t('analytics.settings')}
 						</button>
 					</section>
 					<section>
-						<h2>Site</h2>
-						<a href="/sitemap-index.xml">Sitemap</a>
-						<a href="/robots.txt">Robots.txt</a>
-						<a href="/rss.xml">RSS feed</a>
+						<h2>{t('footer.site')}</h2>
+						<a href="/sitemap-index.xml">{t('footer.sitemap')}</a>
+						<a href="/robots.txt">{t('footer.robots')}</a>
+						<a href="/rss.xml">{t('footer.rss')}</a>
 					</section>
 				</nav>
 			</div>
 
 			<div class="footer-bottom">
 				<span>&copy; {today.getFullYear()} The Refract Co.</span>
-				<span>Independent since 2023.</span>
+				<span>{t('footer.independent')}</span>
+				<LanguagePicker />
 			</div>
 		</div>
 	</div>

@@ -1,4 +1,7 @@
 ---
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+import { localeMetadata } from '../i18n/ui';
+
 interface Props {
 	campaign: string;
 	thirdHref?: string;
@@ -8,10 +11,16 @@ interface Props {
 
 const {
 	campaign,
-	thirdHref = '/paper/',
-	thirdLabel = 'Learn more',
+	thirdHref,
+	thirdLabel,
 	loadScript = true,
 } = Astro.props;
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const localizedHref = useTranslatedPath(locale);
+const t = useTranslations(locale);
+const resolvedThirdLabel = thirdLabel ?? t('paper.actions.learnMore');
+const resolvedThirdHref = thirdHref ?? localizedHref('paper');
 const storeUrl = `https://apps.microsoft.com/detail/9pjkn3wdpm1b?cid=${encodeURIComponent(campaign)}`;
 ---
 
@@ -23,7 +32,7 @@ const storeUrl = `https://apps.microsoft.com/detail/9pjkn3wdpm1b?cid=${encodeURI
 		window-mode="direct"
 		theme="auto"
 		size="small"
-		language="en-us"
+		language={localeMetadata[locale]?.storeLocale ?? locale.toLowerCase()}
 		animation="on"
 		data-analytics-event="paper_store_click"
 		data-analytics-action="store_badge"
@@ -38,7 +47,7 @@ const storeUrl = `https://apps.microsoft.com/detail/9pjkn3wdpm1b?cid=${encodeURI
 			data-analytics-action="store_fallback"
 			data-analytics-location={campaign}
 		>
-			Get Paper from Microsoft Store <span aria-hidden="true">↗</span>
+			{t('paper.actions.storeFallback')} <span aria-hidden="true">↗</span>
 		</a>
 	</noscript>
 	<a
@@ -48,16 +57,16 @@ const storeUrl = `https://apps.microsoft.com/detail/9pjkn3wdpm1b?cid=${encodeURI
 		data-analytics-action="store_link"
 		data-analytics-location={campaign}
 	>
-		View on the Store <span aria-hidden="true">↗</span>
+		{t('paper.actions.store')} <span aria-hidden="true">↗</span>
 	</a>
 	<a
 		class="round-action round-action--paper"
-		href={thirdHref}
+		href={resolvedThirdHref}
 		data-analytics-event="paper_detail_click"
-		data-analytics-action={thirdLabel}
+		data-analytics-action={resolvedThirdLabel}
 		data-analytics-location={campaign}
 	>
-		{thirdLabel} <span aria-hidden="true">→</span>
+		{resolvedThirdLabel} <span aria-hidden="true">→</span>
 	</a>
 </div>
 

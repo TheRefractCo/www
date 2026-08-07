@@ -1,0 +1,84 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import type { GetStaticPathsOptions } from 'astro';
+import { defaultLang } from '../../../../i18n/ui';
+import { getDocRouteId, isLocale, translateRouteSegments, useTranslatedPath, useTranslations } from '../../../../i18n/utils';
+import LocaleNotice from '../../../../components/LocaleNotice.astro';
+import PaperDocsShell from '../../../../components/PaperDocsShell.astro';
+import RefractBaseLayout from '../../../../layouts/RefractBaseLayout.astro';
+
+type ContentEntry = CollectionEntry<'docs'>;
+
+interface LocalizedDoc {
+	id: string;
+	docId: string;
+	data: ContentEntry['data'];
+	entry: ContentEntry;
+	isFallback: boolean;
+}
+
+export async function getStaticPaths({ routePattern }: GetStaticPathsOptions) {
+	const docsLocale = routePattern.split('/').find(isLocale) ?? defaultLang;
+	const allEntries = await getCollection('docs');
+	const sourceEntries = allEntries.filter((entry) => entry.id.startsWith(`${defaultLang}/`));
+	const translatedEntries = allEntries.filter((entry) => entry.id.startsWith(`${docsLocale}/`));
+	const entries: LocalizedDoc[] = sourceEntries.map((sourceEntry) => {
+		const translatedEntry = translatedEntries.find((entry) => entry.data.docId === sourceEntry.data.docId);
+		return {
+			id: getDocRouteId(sourceEntry.id, defaultLang),
+			docId: sourceEntry.data.docId,
+			data: translatedEntry?.data ?? sourceEntry.data,
+			entry: translatedEntry ?? sourceEntry,
+			isFallback: !translatedEntry,
+		};
+	});
+
+	return entries.map((doc) => ({
+		params: { slug: translateRouteSegments(doc.id, docsLocale) },
+		props: { doc, entries: entries.map(({ id, docId, data }) => ({ id, docId, data })) },
+	}));
+}
+
+interface Props {
+	doc: LocalizedDoc;
+	entries: { id: string; docId: string; data: ContentEntry['data'] }[];
+}
+
+const { doc, entries } = Astro.props;
+const { Content } = await render(doc.entry);
+const categoryRoot = doc.id.split('/')[0];
+const locale = Astro.currentLocale ?? defaultLang;
+const localizedHref = useTranslatedPath(locale);
+const t = useTranslations(locale);
+---
+
+<RefractBaseLayout
+	title={`${doc.data.title} | ${t('docs.shell.title')}`}
+	description={doc.data.description}
+	pageClass="wide-page paper-shell paper-docs-shell"
+>
+	<PaperDocsShell entries={entries} currentId={doc.id} locale={locale}>
+		{doc.isFallback && (
+			<LocaleNotice
+				title={t('language.notice.partialTitle')}
+				message={t('language.notice.partialMessage')}
+				englishHref={useTranslatedPath(defaultLang)(`paper/docs/${doc.id}`)}
+				linkLabel={t('docs.article.openEnglish')}
+			/>
+		)}
+		<article id={doc.docId} data-doc-id={doc.docId} class="paper-docs__article">
+			<header class="paper-docs__article-header">
+				<p class="paper-docs__breadcrumb">
+					<a href={localizedHref('paper/docs')}>{t('docs.shell.title')}</a>
+					<span aria-hidden="true">/</span>
+					<a href={localizedHref(`paper/docs/${categoryRoot}`)}>{doc.data.category}</a>
+				</p>
+				<h1>{doc.data.title}</h1>
+				<p>{doc.data.description}</p>
+			</header>
+			<div class="paper-docs__content">
+				<Content />
+			</div>
+		</article>
+	</PaperDocsShell>
+</RefractBaseLayout>

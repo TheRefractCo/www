@@ -5,7 +5,11 @@ import paperOverview from '../assets/projects/paper/paper-overview.png';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import PaperActions from '../components/PaperActions.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/product-pages.css';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const localizedHref = useTranslatedPath(locale);
 ---
 
 <RefractBaseLayout
@@ -27,8 +31,8 @@ import '../styles/product-pages.css';
 					pleasant, and respectful of your attention.
 				</p>
 				<div class="home-hero__links">
-					<a class="text-link" href="/about/">About Refract <span aria-hidden="true">→</span></a>
-					<a class="text-link" href="/blog/">Read the blog <span aria-hidden="true">→</span></a>
+					<a class="text-link" href={localizedHref('about')}>About Refract <span aria-hidden="true">→</span></a>
+					<a class="text-link" href={localizedHref('blog')}>Read the blog <span aria-hidden="true">→</span></a>
 				</div>
 			</div>
 
@@ -44,7 +48,7 @@ import '../styles/product-pages.css';
 					<p class="product-kicker">Selected projects</p>
 					<h2 id="home-projects-title">Made with care.<br />Kept intentionally small.</h2>
 				</div>
-				<a class="text-link" href="/projects/">All projects <span aria-hidden="true">→</span></a>
+				<a class="text-link" href={localizedHref('projects')}>All projects <span aria-hidden="true">→</span></a>
 			</header>
 
 			<article class="home-project home-project--paper">
@@ -68,7 +72,7 @@ import '../styles/product-pages.css';
 					<p class="product-kicker">This website</p>
 					<h3>A quieter home on the web.</h3>
 					<p>Fast, static, and focused on the work—with no accounts and only optional, consent-based analytics.</p>
-					<a class="text-link text-link--light" href="/projects/#refract-website">
+					<a class="text-link text-link--light" href={`${localizedHref('projects')}#refract-website`}>
 						How it was made <span aria-hidden="true">→</span>
 					</a>
 				</div>

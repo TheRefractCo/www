@@ -3,8 +3,11 @@ import { ClientRouter } from 'astro:transitions';
 import type { ImageMetadata } from 'astro';
 import Analytics from '../components/Analytics.astro';
 import BaseHead from '../components/BaseHead.astro';
+import LanguageSuggestion from '../components/LanguageSuggestion.astro';
 import RefractFooter from '../components/RefractFooter.astro';
 import RefractHeader from '../components/RefractHeader.astro';
+import { defaultLang } from '../i18n/ui';
+import { localeList } from '../i18n/utils';
 
 interface Props {
 	title: string;
@@ -15,6 +18,7 @@ interface Props {
 }
 
 const { title, description, image, pageClass, footerVariant = 'default' } = Astro.props;
+const pageLocale = Astro.currentLocale ?? defaultLang;
 
 const pageTransition = {
 	forwards: {
@@ -49,7 +53,7 @@ const pageTransition = {
 ---
 
 <!doctype html>
-<html lang="en">
+	<html lang={pageLocale}>
 	<head>
 		<BaseHead title={title} description={description} image={image} />
 		<ClientRouter />
@@ -62,6 +66,7 @@ const pageTransition = {
 			</main>
 			<RefractFooter variant={footerVariant} />
 		</div>
+		<LanguageSuggestion />
 		<Analytics />
 	</body>
 </html>
@@ -120,7 +125,7 @@ const pageTransition = {
 	}
 </style>
 
-<script>
+<script define:vars={{ supportedLocaleCodes: localeList }}>
 	const prepareStaggeredHeadings = () => {
 		document.querySelectorAll<HTMLHeadingElement>('h1').forEach((heading) => {
 			if (heading.dataset.staggeredHeading === 'true') return;
@@ -171,8 +176,13 @@ const pageTransition = {
 	prepareStaggeredHeadings();
 
 	const routeOrder = ['/', '/projects/', '/blog/', '/about/', '/contact/'];
+	const logicalPathname = (pathname: string) => {
+		const parts = pathname.split('/').filter(Boolean);
+		if (supportedLocaleCodes.includes(parts[0])) parts.shift();
+		return `/${parts.join('/')}/`.replace('//', '/') || '/';
+	};
 	const routeIndex = (pathname: string) => {
-		const normalized = pathname.replace(/\/+$/, '') || '/';
+		const normalized = logicalPathname(pathname).replace(/\/+$/, '') || '/';
 		const index = routeOrder.findIndex((route) => {
 			const normalizedRoute = route.replace(/\/+$/, '') || '/';
 			return normalized === normalizedRoute || (normalizedRoute !== '/' && normalized.startsWith(`${normalizedRoute}/`));

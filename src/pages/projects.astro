@@ -10,7 +10,11 @@ import PaperActions from '../components/PaperActions.astro';
 import PaperScreenshotRail from '../components/PaperScreenshotRail.astro';
 import SnapCarousel from '../components/SnapCarousel.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/product-pages.css';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const localizedHref = useTranslatedPath(locale);
 ---
 
 <RefractBaseLayout
@@ -69,26 +73,26 @@ import '../styles/product-pages.css';
 			</header>
 
 			<div class="website-actions">
-				<a class="round-action round-action--light" href="/">Visit the homepage <span aria-hidden="true">↗</span></a>
-				<a class="round-action round-action--outline-light" href="/blog/">Read the blog <span aria-hidden="true">→</span></a>
-				<a class="round-action round-action--outline-light" href="/about/">About Refract <span aria-hidden="true">→</span></a>
+				<a class="round-action round-action--light" href={localizedHref('')}>Visit the homepage <span aria-hidden="true">↗</span></a>
+				<a class="round-action round-action--outline-light" href={localizedHref('blog')}>Read the blog <span aria-hidden="true">→</span></a>
+				<a class="round-action round-action--outline-light" href={localizedHref('about')}>About Refract <span aria-hidden="true">→</span></a>
 			</div>
 
 			<SnapCarousel title="A few corners of the site" label="Website page previews" className="website-carousel">
 				<figure class="website-screenshot">
-					<a href="/">
+					<a href={localizedHref('')}>
 						<Image src={siteHome} alt="The Refract Co. homepage" loading="lazy" quality={86} />
 					</a>
 					<figcaption>Home — the front door</figcaption>
 				</figure>
 				<figure class="website-screenshot">
-					<a href="/privacy/">
+					<a href={localizedHref('privacy')}>
 						<Image src={sitePrivacy} alt="The Refract Co. privacy page" loading="lazy" quality={86} />
 					</a>
 					<figcaption>Privacy — clear choices in plain English</figcaption>
 				</figure>
 				<figure class="website-screenshot">
-					<a href="/contact/">
+					<a href={localizedHref('contact')}>
 						<Image src={siteContact} alt="The Refract Co. contact page" loading="lazy" quality={86} />
 					</a>
 					<figcaption>Contact — three inboxes, zero forms</figcaption>

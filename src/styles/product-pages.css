@@ -405,6 +405,11 @@
 	font-family: "IBM Plex Sans", system-ui, sans-serif;
 }
 
+.paper-docs-quicklink {
+	margin-top: -1.15rem;
+	font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
+
 .paper-actions ms-store-badge {
 	display: inline-flex;
 	min-height: 3.1rem;
@@ -625,6 +630,59 @@ html:has(body.paper-shell) {
 
 .paper-page {
 	font-family: "Source Serif Pro", Georgia, serif;
+}
+
+.paper-locale-notice {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	gap: 0.8rem;
+	align-items: center;
+	margin: 1.25rem 0 0;
+	padding: 0.9rem 1rem;
+	background: color-mix(in srgb, var(--paper-soft) 72%, var(--paper-surface));
+	border: 1px solid var(--paper-border);
+	border-radius: 1rem;
+	font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.paper-locale-notice__icon {
+	display: grid;
+	width: 2.25rem;
+	height: 2.25rem;
+	place-items: center;
+	background: var(--paper-surface);
+	border-radius: 50%;
+	color: var(--paper-accent);
+}
+
+.paper-locale-notice strong,
+.paper-locale-notice p {
+	display: block;
+	margin: 0;
+}
+
+.paper-locale-notice strong {
+	font-size: 0.86rem;
+}
+
+.paper-locale-notice p {
+	margin-top: 0.12rem;
+	color: var(--paper-muted);
+	font-size: 0.78rem;
+	line-height: 1.4;
+}
+
+.paper-locale-notice a {
+	color: var(--paper-accent);
+	font-size: 0.78rem;
+	font-weight: 700;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.paper-locale-notice a:hover {
+	color: var(--paper-accent-hover);
+	text-decoration: underline;
 }
 
 .paper-kicker {
@@ -954,6 +1012,14 @@ html:has(body.paper-shell) {
 
 	.paper-hero {
 		padding-top: 4rem;
+	}
+
+	.paper-locale-notice {
+		grid-template-columns: auto minmax(0, 1fr);
+	}
+
+	.paper-locale-notice a {
+		grid-column: 2;
 	}
 
 	.paper-hero__visual {

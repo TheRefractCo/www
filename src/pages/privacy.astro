@@ -3,7 +3,11 @@ import CopyToast from "../components/CopyToast.astro";
 import EmailCard from "../components/EmailCard.astro";
 import LightFieldHero from "../components/LightFieldHero.astro";
 import RefractBaseLayout from "../layouts/RefractBaseLayout.astro";
+import { getLangFromUrl, useTranslatedPath } from "../i18n/utils";
 import "../styles/info-pages.css";
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const localizedHref = useTranslatedPath(locale);
 ---
 
 <RefractBaseLayout
@@ -169,7 +173,7 @@ import "../styles/info-pages.css";
           You may ask to access, correct, delete, restrict, or receive personal
           information connected to this website, and you may object where that
           right applies. You may withdraw consent at any time without affecting
-          earlier lawful processing. Use the <a href="/contact/#privacy"
+          earlier lawful processing. Use the <a href={`${localizedHref("contact")}#privacy`}
             >privacy inbox</a
           > to make a request. You may also complain to your local data
           protection authority. We will update this page if the way refract.fyi

@@ -1,5 +1,10 @@
 ---
 import { analyticsConfig } from '../config/analytics';
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
+const localizedHref = useTranslatedPath(locale);
 
 const clientConfig = {
 	consentMode: analyticsConfig.consentMode,
@@ -26,18 +31,17 @@ const clientConfig = {
 				hidden
 			>
 				<div class="analytics-consent__copy">
-					<p class="analytics-consent__eyebrow">A small, optional signal</p>
-					<h2 id="analytics-consent-title">Help us understand what works?</h2>
+					<p class="analytics-consent__eyebrow">{t('analytics.eyebrow')}</p>
+					<h2 id="analytics-consent-title">{t('analytics.title')}</h2>
 					<p data-analytics-consent-message>
-						If you allow it, Google Analytics will tell us which pages are useful and whether
-						people find Paper. It stays off until you say yes. <a href="/privacy/#website-analytics">
-							Privacy details
+						{t('analytics.message')} <a href={`${localizedHref('privacy')}#website-analytics`}>
+							{t('analytics.privacy')}
 						</a>
 					</p>
 				</div>
 				<div class="analytics-consent__actions">
-					<button type="button" data-analytics-choice="granted">Allow analytics</button>
-					<button type="button" data-analytics-choice="denied">No thanks</button>
+					<button type="button" data-analytics-choice="granted">{t('analytics.allow')}</button>
+					<button type="button" data-analytics-choice="denied">{t('analytics.deny')}</button>
 				</div>
 			</aside>
 

@@ -1,0 +1,174 @@
+---
+import { Image } from 'astro:assets';
+import {
+	BookOpen,
+	FileText,
+	Library,
+	LockKeyhole,
+	Monitor,
+	Newspaper,
+	NotebookPen,
+	PenTool,
+	Share2,
+	Sparkles,
+} from '@lucide/astro';
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+import { defaultLang } from '../i18n/ui';
+import paperWordmark from '../assets/brand/paper-wordmark.svg';
+import paperAnnotate from '../assets/projects/paper/paper-annotate.png';
+import paperOverview from '../assets/projects/paper/paper-overview.png';
+import LocaleNotice from './LocaleNotice.astro';
+import PaperActions from './PaperActions.astro';
+import PaperScreenshotRail from './PaperScreenshotRail.astro';
+import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import '../styles/product-pages.css';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
+const localizedHref = useTranslatedPath(locale);
+const englishHref = useTranslatedPath(defaultLang)('paper');
+const docsHref = localizedHref('paper/docs');
+---
+
+<RefractBaseLayout
+	title={t('paper.title')}
+	description={t('paper.description')}
+	pageClass="wide-page paper-shell"
+>
+	<div class="paper-page">
+		{locale !== defaultLang && (
+			<LocaleNotice
+				title={t('paper.localeNotice.title')}
+				message={t('paper.localeNotice.message')}
+				englishHref={englishHref}
+				linkLabel={t('paper.localeNotice.english')}
+			/>
+		)}
+
+		<section class="paper-hero" aria-labelledby="paper-title">
+			<div class="paper-hero__copy">
+				<img class="paper-hero__logo" src={paperWordmark.src} alt="Paper" />
+				<p class="paper-kicker">{t('paper.hero.kicker')}</p>
+				<h1 id="paper-title">
+					{t('paper.hero.line1')}<br />{t('paper.hero.line2')}
+				</h1>
+				<p class="paper-hero__lead">{t('paper.hero.lead')}</p>
+				<PaperActions
+					campaign="rf-site-paper"
+					thirdHref="#features"
+					thirdLabel={t('paper.actions.explore')}
+				/>
+				<a class="paper-docs-quicklink text-link text-link--paper" href={docsHref}>
+					<BookOpen size={17} strokeWidth={1.8} aria-hidden="true" />
+					{t('paper.docsLink')} <span aria-hidden="true">→</span>
+				</a>
+			</div>
+			<div class="paper-hero__visual">
+				<Image
+					src={paperOverview}
+					alt={t('paper.heroImageAlt')}
+					loading="eager"
+					quality={90}
+				/>
+			</div>
+		</section>
+
+		<section class="paper-promise" aria-label={t('paper.highlightsLabel')}>
+			<p><span aria-hidden="true"><Library /></span><strong>{t('paper.promise.libraryStrong')}</strong> {t('paper.promise.library')}</p>
+			<p><span aria-hidden="true"><PenTool /></span><strong>{t('paper.promise.inkStrong')}</strong> {t('paper.promise.ink')}</p>
+			<p><span aria-hidden="true"><Monitor /></span><strong>{t('paper.promise.windowsStrong')}</strong> {t('paper.promise.windows')}</p>
+		</section>
+
+		<section id="features" class="paper-features" aria-labelledby="paper-features-title">
+			<header class="paper-section-heading">
+				<p class="paper-kicker">{t('paper.features.kicker')}</p>
+				<h2 id="paper-features-title">
+					{t('paper.features.line1')}<br />
+					{t('paper.features.line2')}
+				</h2>
+			</header>
+
+			<div class="paper-feature-surface">
+				<article>
+					<span class="paper-feature__icon" aria-hidden="true"><FileText /></span>
+					<h3>{t('paper.feature.reader.title')}</h3>
+					<p>{t('paper.feature.reader.body')}</p>
+				</article>
+				<article>
+					<span class="paper-feature__icon" aria-hidden="true"><PenTool /></span>
+					<h3>{t('paper.feature.ink.title')}</h3>
+					<p>{t('paper.feature.ink.body')}</p>
+				</article>
+				<article>
+					<span class="paper-feature__icon" aria-hidden="true"><BookOpen /></span>
+					<h3>{t('paper.feature.books.title')}</h3>
+					<p>{t('paper.feature.books.body')}</p>
+				</article>
+				<article>
+					<span class="paper-feature__icon" aria-hidden="true"><NotebookPen /></span>
+					<h3>{t('paper.feature.notebook.title')}</h3>
+					<p>{t('paper.feature.notebook.body')}</p>
+				</article>
+				<article>
+					<span class="paper-feature__icon" aria-hidden="true"><Share2 /></span>
+					<h3>{t('paper.feature.share.title')}</h3>
+					<p>{t('paper.feature.share.body')}</p>
+				</article>
+				<article>
+					<span class="paper-feature__icon" aria-hidden="true"><Monitor /></span>
+					<h3>{t('paper.feature.pc.title')}</h3>
+					<p>{t('paper.feature.pc.body')}</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="paper-ink-story">
+			<div class="paper-ink-story__copy">
+				<p class="paper-kicker">{t('paper.ink.kicker')}</p>
+				<h2>{t('paper.ink.title')}</h2>
+				<p>{t('paper.ink.body')}</p>
+			</div>
+			<div class="paper-ink-story__visual">
+				<Image src={paperAnnotate} alt={t('paper.ink.imageAlt')} loading="lazy" quality={88} />
+			</div>
+		</section>
+
+		<PaperScreenshotRail className="paper-page-carousel" />
+
+		<section class="paper-roadmap" aria-labelledby="paper-roadmap-title">
+			<header class="paper-section-heading">
+				<p class="paper-kicker">{t('paper.roadmap.kicker')}</p>
+				<h2 id="paper-roadmap-title">{t('paper.roadmap.title')}</h2>
+				<p>{t('paper.roadmap.lead')}</p>
+			</header>
+			<div class="paper-roadmap__items">
+				<article>
+					<span aria-hidden="true"><Sparkles /></span>
+					<div><h3>{t('paper.roadmap.ai.title')}</h3><p>{t('paper.roadmap.ai.body')}</p></div>
+					<small>{t('paper.roadmap.comingSoon')}</small>
+				</article>
+				<article>
+					<span aria-hidden="true"><LockKeyhole /></span>
+					<div><h3>{t('paper.roadmap.lock.title')}</h3><p>{t('paper.roadmap.lock.body')}</p></div>
+					<small>{t('paper.roadmap.comingSoon')}</small>
+				</article>
+				<article>
+					<span aria-hidden="true"><Newspaper /></span>
+					<div><h3>{t('paper.roadmap.news.title')}</h3><p>{t('paper.roadmap.news.body')}</p></div>
+					<small>{t('paper.roadmap.comingSoon')}</small>
+				</article>
+			</div>
+		</section>
+
+		<section class="paper-closing">
+			<p class="paper-kicker">{t('paper.closing.kicker')}</p>
+			<h2>{t('paper.closing.line1')}<br />{t('paper.closing.line2')}</h2>
+			<PaperActions
+				campaign="rf-site-paper"
+				thirdHref={`${localizedHref('privacy')}#paper-policy`}
+				thirdLabel={t('paper.actions.privacy')}
+				loadScript={false}
+			/>
+		</section>
+	</div>
+</RefractBaseLayout>

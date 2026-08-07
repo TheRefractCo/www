@@ -1,0 +1,66 @@
+---
+import { BookOpen, Library, PenTool } from '@lucide/astro';
+import { getCollection } from 'astro:content';
+import { defaultLang } from '../../../i18n/ui';
+import { useTranslatedPath, useTranslations, getDocRouteId } from '../../../i18n/utils';
+import PaperDocsShell from '../../../components/PaperDocsShell.astro';
+import RefractBaseLayout from '../../../layouts/RefractBaseLayout.astro';
+
+const allEntries = await getCollection('docs');
+const entries = allEntries
+	.filter((entry) => entry.id.startsWith(`${defaultLang}/`))
+	.map((entry) => ({
+		id: getDocRouteId(entry.id, defaultLang),
+		docId: entry.data.docId,
+		data: entry.data,
+	}));
+const categoryPages = entries
+	.filter((entry) => !entry.id.includes('/'))
+	.sort((a, b) => a.data.categoryOrder - b.data.categoryOrder);
+const subpageCount = (category: string) => entries.filter((entry) => entry.data.category === category && entry.id.includes('/')).length;
+const icons = [BookOpen, PenTool, Library];
+const t = useTranslations(defaultLang);
+const localizedHref = useTranslatedPath(defaultLang);
+---
+
+<RefractBaseLayout
+	title={`Paper docs | ${t('docs.home.whyTitle')}`}
+	description={t('docs.home.lead')}
+	pageClass="wide-page paper-shell paper-docs-shell"
+>
+	<PaperDocsShell entries={entries} locale={defaultLang}>
+		<div class="paper-docs-home__intro">
+			<p class="paper-kicker">{t('docs.home.kicker')}</p>
+			<h1>{t('docs.home.titleLine1')}<br />{t('docs.home.titleLine2')}</h1>
+			<p>{t('docs.home.lead')}</p>
+		</div>
+
+		<section aria-labelledby="paper-docs-start-title">
+			<p class="paper-docs-home__label" id="paper-docs-start-title">{t('docs.home.startLabel')}</p>
+			<div class="paper-docs-home__cards">
+				{categoryPages.map((entry, index) => {
+					const Icon = icons[index % icons.length];
+					return (
+						<a class="paper-docs-home__card" href={localizedHref(`paper/docs/${entry.id}`)}>
+							<span class="paper-docs-home__card-icon" aria-hidden="true"><Icon size={20} strokeWidth={1.8} /></span>
+							<h2>{entry.data.category}</h2>
+							<p>{entry.data.description}</p>
+							<small>{subpageCount(entry.data.category)} {subpageCount(entry.data.category) === 1 ? t('docs.home.guide.one') : t('docs.home.guide.many')} <span aria-hidden="true">→</span></small>
+						</a>
+					);
+				})}
+			</div>
+		</section>
+
+		<section class="paper-docs-home__why" aria-labelledby="paper-docs-why-title">
+			<div>
+				<p class="paper-kicker">{t('docs.home.whyKicker')}</p>
+				<h2 id="paper-docs-why-title">{t('docs.home.whyTitle')}</h2>
+			</div>
+			<div>
+				<p>{t('docs.home.whyBody1')}</p>
+				<p>{t('docs.home.whyBody2')}</p>
+			</div>
+		</section>
+	</PaperDocsShell>
+</RefractBaseLayout>

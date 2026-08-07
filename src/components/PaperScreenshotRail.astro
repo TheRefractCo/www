@@ -4,6 +4,7 @@ import paperAnnotate from '../assets/projects/paper/paper-annotate.png';
 import paperLibrary from '../assets/projects/paper/paper-library.png';
 import paperOverview from '../assets/projects/paper/paper-overview.png';
 import paperRoadmap from '../assets/projects/paper/paper-roadmap.png';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import SnapCarousel from './SnapCarousel.astro';
 
 interface Props {
@@ -11,32 +12,34 @@ interface Props {
 	className?: string;
 }
 
-const { title = 'See Paper in action', className } = Astro.props;
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
+const { title = t('paper.carousel.title'), className } = Astro.props;
 const screenshots = [
 	{
 		src: paperOverview,
-		alt: 'A montage of the Paper app, its logo, library, reader, notes, and settings.',
-		caption: 'A reading home built for Windows.',
+		alt: t('paper.carousel.overviewAlt'),
+		caption: t('paper.carousel.overviewCaption'),
 	},
 	{
 		src: paperLibrary,
-		alt: 'The Paper library showing imported PDF and EPUB documents.',
-		caption: 'PDFs and e-books, together in one library.',
+		alt: t('paper.carousel.libraryAlt'),
+		caption: t('paper.carousel.libraryCaption'),
 	},
 	{
 		src: paperAnnotate,
-		alt: 'A PDF open in Paper with handwritten annotations made using Windows Ink.',
-		caption: 'Read, highlight, and write directly on your documents.',
+		alt: t('paper.ink.imageAlt'),
+		caption: t('paper.carousel.annotateCaption'),
 	},
 	{
 		src: paperRoadmap,
-		alt: 'Paper roadmap artwork for AI summaries, Windows Hello library lock, and news.',
-		caption: 'A thoughtful roadmap for what comes next.',
+		alt: t('paper.carousel.roadmapAlt'),
+		caption: t('paper.carousel.roadmapCaption'),
 	},
 ];
 ---
 
-<SnapCarousel title={title} label="Paper screenshots" className={className}>
+<SnapCarousel title={title} label={t('paper.carousel.label')} className={className}>
 	{
 		screenshots.map((screenshot) => (
 			<figure class="paper-screenshot">

@@ -1,0 +1,87 @@
+---
+import { BookOpen, Library, PenTool } from '@lucide/astro';
+import { getCollection } from 'astro:content';
+import { defaultLang } from '../../../../i18n/ui';
+import { getDocRouteId, useTranslatedPath, useTranslations } from '../../../../i18n/utils';
+import LocaleNotice from '../../../../components/LocaleNotice.astro';
+import PaperDocsShell from '../../../../components/PaperDocsShell.astro';
+import RefractBaseLayout from '../../../../layouts/RefractBaseLayout.astro';
+
+const allEntries = await getCollection('docs');
+const sourceEntries = allEntries.filter((entry) => entry.id.startsWith(`${defaultLang}/`));
+const translatedEntries = allEntries.filter((entry) => entry.id.startsWith(`${Astro.currentLocale}/`));
+const sourceDocs = sourceEntries.map((sourceEntry) => ({
+	id: getDocRouteId(sourceEntry.id, defaultLang),
+	docId: sourceEntry.data.docId,
+	data: sourceEntry.data,
+}));
+const entries = sourceDocs.map((sourceEntry) => {
+	const translatedEntry = translatedEntries.find((entry) => entry.data.docId === sourceEntry.docId);
+	return {
+		id: sourceEntry.id,
+		docId: sourceEntry.docId,
+		data: translatedEntry?.data ?? sourceEntry.data,
+	};
+});
+const fallbackCount = sourceDocs.filter((entry) => !translatedEntries.some((translated) => translated.data.docId === entry.docId)).length;
+const categoryPages = entries
+	.filter((entry) => !entry.id.includes('/'))
+	.sort((a, b) => a.data.categoryOrder - b.data.categoryOrder);
+const subpageCount = (categoryId: string) => entries.filter((entry) => entry.id.startsWith(`${categoryId}/`)).length;
+const icons = [BookOpen, PenTool, Library];
+const locale = Astro.currentLocale ?? defaultLang;
+const t = useTranslations(locale);
+const localizedHref = useTranslatedPath(locale);
+---
+
+<RefractBaseLayout
+	title={`${t('docs.shell.title')} | ${t('docs.home.whyTitle')}`}
+	description={t('docs.home.lead')}
+	pageClass="wide-page paper-shell paper-docs-shell"
+>
+	<PaperDocsShell entries={entries} locale={locale}>
+		{fallbackCount > 0 && (
+			<LocaleNotice
+				title={t('docs.partial.title')}
+				message={t('docs.partial.message')}
+				englishHref={useTranslatedPath(defaultLang)('paper/docs')}
+				linkLabel={t('docs.partial.english')}
+			/>
+		)}
+
+		<div class="paper-docs-home__intro">
+			<p class="paper-kicker">{t('docs.home.kicker')}</p>
+			<h1>{t('docs.home.titleLine1')}<br />{t('docs.home.titleLine2')}</h1>
+			<p>{t('docs.home.lead')}</p>
+		</div>
+
+		<section aria-labelledby="paper-docs-start-title">
+			<p class="paper-docs-home__label" id="paper-docs-start-title">{t('docs.home.startLabel')}</p>
+			<div class="paper-docs-home__cards">
+				{categoryPages.map((entry, index) => {
+					const Icon = icons[index % icons.length];
+					const count = subpageCount(entry.id);
+					return (
+						<a class="paper-docs-home__card" href={localizedHref(`paper/docs/${entry.id}`)}>
+							<span class="paper-docs-home__card-icon" aria-hidden="true"><Icon size={20} strokeWidth={1.8} /></span>
+							<h2>{entry.data.category}</h2>
+							<p>{entry.data.description}</p>
+							<small>{count} {count === 1 ? t('docs.home.guide.one') : t('docs.home.guide.many')} <span aria-hidden="true">→</span></small>
+						</a>
+					);
+				})}
+			</div>
+		</section>
+
+		<section class="paper-docs-home__why" aria-labelledby="paper-docs-why-title">
+			<div>
+				<p class="paper-kicker">{t('docs.home.whyKicker')}</p>
+				<h2 id="paper-docs-why-title">{t('docs.home.whyTitle')}</h2>
+			</div>
+			<div>
+				<p>{t('docs.home.whyBody1')}</p>
+				<p>{t('docs.home.whyBody2')}</p>
+			</div>
+		</section>
+	</PaperDocsShell>
+</RefractBaseLayout>

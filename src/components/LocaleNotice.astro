@@ -1,0 +1,21 @@
+---
+import { Languages } from '@lucide/astro';
+
+interface Props {
+	title: string;
+	message: string;
+	englishHref: string;
+	linkLabel: string;
+}
+
+const { title, message, englishHref, linkLabel } = Astro.props;
+---
+
+<aside class="paper-locale-notice" role="status">
+	<span class="paper-locale-notice__icon" aria-hidden="true"><Languages size={18} strokeWidth={1.8} /></span>
+	<div>
+		<strong>{title}</strong>
+		<p>{message}</p>
+	</div>
+	<a href={englishHref}>{linkLabel} <span aria-hidden="true">↗</span></a>
+</aside>

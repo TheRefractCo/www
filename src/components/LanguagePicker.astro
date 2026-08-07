@@ -1,0 +1,66 @@
+---
+import { getLangFromUrl, getRouteFromUrl, localeList, useTranslatedPath, useTranslations } from '../i18n/utils';
+import { languages } from '../i18n/ui';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const route = getRouteFromUrl(Astro.url, Astro.currentLocale);
+const translatePath = useTranslatedPath(locale);
+const t = useTranslations(locale);
+const options = localeList.map((value) => ({
+	value,
+	label: languages[value],
+	href: translatePath(route, value),
+}));
+---
+
+<form class="footer-language" data-language-picker>
+	<label for="footer-language-select">{t('footer.language')}</label>
+	<select
+		id="footer-language-select"
+		aria-label={t('footer.languageHint')}
+		data-language-select
+	>
+		{options.map((option) => (
+			<option value={option.href} selected={option.value === locale}>
+				{option.label}
+			</option>
+		))}
+	</select>
+	<noscript>
+		<span class="footer-language__noscript-label">{t('footer.language')}:</span>
+		{options.map((option) => (
+			<a href={option.href} aria-current={option.value === locale ? 'page' : undefined}>
+				{option.label}
+			</a>
+		))}
+	</noscript>
+</form>
+
+<script>
+	const preferenceKey = 'refract.locale-preference.v1';
+
+	const setupLanguagePickers = () => {
+		document.querySelectorAll<HTMLFormElement>('[data-language-picker]').forEach((picker) => {
+			if (picker.dataset.ready === 'true') return;
+			const select = picker.querySelector<HTMLSelectElement>('[data-language-select]');
+			if (!select) return;
+
+			picker.dataset.ready = 'true';
+			select.addEventListener('change', () => {
+				try {
+					localStorage.setItem(preferenceKey, select.value);
+				} catch {
+					// Navigation still works when storage is unavailable.
+				}
+				if (select.value) window.location.assign(select.value);
+			});
+		});
+	};
+
+	const windowWithLanguagePickerSetup = window as Window & { refractLanguagePickerSetup?: boolean };
+	if (!windowWithLanguagePickerSetup.refractLanguagePickerSetup) {
+		document.addEventListener('astro:page-load', setupLanguagePickers);
+		windowWithLanguagePickerSetup.refractLanguagePickerSetup = true;
+	}
+	setupLanguagePickers();
+</script>

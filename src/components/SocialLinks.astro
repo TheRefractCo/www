@@ -1,10 +1,14 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
 interface Props {
 	className?: string;
 	variant?: 'page' | 'footer';
 }
 
 const { className, variant = 'page' } = Astro.props;
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
 const analyticsLocation = className?.includes('footer') ? 'footer' : 'page';
 
 const socials = [
@@ -27,14 +31,14 @@ const socials = [
 
 <div
 	class:list={['social-links', className]}
-	aria-label={variant === 'page' ? 'Refract on social media' : undefined}
+	aria-label={variant === 'page' ? t('social.aria') : undefined}
 	aria-labelledby={variant === 'footer' ? 'footer-social-title' : undefined}
 >
 	{variant === 'footer' && (
 		<div class="social-links__intro">
-			<p class="social-links__eyebrow">Elsewhere</p>
-			<h2 id="footer-social-title">Find us on socials</h2>
-			<p>New work, small details, and the occasional thought from Refract.</p>
+			<p class="social-links__eyebrow">{t('social.elsewhere')}</p>
+			<h2 id="footer-social-title">{t('social.title')}</h2>
+			<p>{t('social.description')}</p>
 		</div>
 	)}
 

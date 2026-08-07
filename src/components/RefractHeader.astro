@@ -1,21 +1,26 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const t = useTranslations(locale);
+const localizedHref = useTranslatedPath(locale);
 ---
 
 <header class="site-header" data-site-header transition:persist="refract-header" transition:animate="none">
 	<nav>
 		<h2>
-			<a class="site-brand" href="/" data-header-link>
+			<a class="site-brand" href={localizedHref('')} data-header-link>
 				<img class="site-brand__wordmark" src={refractWordmark.src} alt="Refract" />
 			</a>
 		</h2>
 		<div>
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/projects/">Projects</HeaderLink>
-			<HeaderLink href="/blog/">Blog</HeaderLink>
-			<HeaderLink href="/about/">About</HeaderLink>
-			<HeaderLink href="/contact/">Contact</HeaderLink>
+			<HeaderLink href={localizedHref('')}>{t('nav.home')}</HeaderLink>
+			<HeaderLink href={localizedHref('projects')}>{t('nav.projects')}</HeaderLink>
+			<HeaderLink href={localizedHref('blog')}>{t('nav.blog')}</HeaderLink>
+			<HeaderLink href={localizedHref('about')}>{t('nav.about')}</HeaderLink>
+			<HeaderLink href={localizedHref('contact')}>{t('nav.contact')}</HeaderLink>
 		</div>
 	</nav>
 </header>
