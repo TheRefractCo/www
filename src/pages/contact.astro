@@ -1,6 +1,7 @@
 ---
 import CopyToast from '../components/CopyToast.astro';
 import EmailCard from '../components/EmailCard.astro';
+import LightFieldContent from '../components/LightFieldContent.astro';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
 import SocialLinks from '../components/SocialLinks.astro';
@@ -21,8 +22,8 @@ const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 	<div class="info-page contact-page">
 		<LightFieldHero
 			className="info-hero info-hero--contact"
-			primary="#ffb26b"
-			secondary="#ff70c4"
+			primary="var(--color-orange-400)"
+			secondary="var(--color-pink-400)"
 			labelledBy="contact-title"
 		>
 			<p class="eyebrow">Contact</p>
@@ -32,6 +33,7 @@ const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 			</p>
 		</LightFieldHero>
 
+		<LightFieldContent className="info-field-content">
 		<div class="email-list" aria-label="Refract email addresses">
 			<EmailCard
 				id="general"
@@ -63,6 +65,7 @@ const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 			</div>
 			<SocialLinks className="page-social-links" />
 		</section>
+		</LightFieldContent>
 	</div>
 
 	<CopyToast />

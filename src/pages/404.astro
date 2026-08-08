@@ -1,6 +1,7 @@
 ---
 import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import UiButton from '../components/UiButton.astro';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/blog-pages.css';
 
@@ -16,12 +17,12 @@ const localizedHref = useTranslatedPath(locale);
 >
 	<LightFieldHero
 		className="not-found-hero"
-		primary="#ff9dcd"
-		secondary="#99a9ff"
+		primary="var(--color-pink-400)"
+		secondary="var(--color-blue-500)"
 	>
 		<p class="eyebrow">404</p>
 		<h1>Page not found</h1>
 		<p class="not-found-hero__lead">This page does not exist.</p>
-		<p><a class="not-found-hero__link" href={localizedHref('')}>Return to Refract <span aria-hidden="true">→</span></a></p>
+		<p><UiButton variant="secondary" href={localizedHref('')}>Return to Refract <span aria-hidden="true">→</span></UiButton></p>
 	</LightFieldHero>
 </RefractBaseLayout>

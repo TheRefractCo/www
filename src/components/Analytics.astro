@@ -1,6 +1,7 @@
 ---
 import { analyticsConfig } from '../config/analytics';
 import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
+import UiButton from './UiButton.astro';
 
 const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 const t = useTranslations(locale);
@@ -40,8 +41,8 @@ const clientConfig = {
 					</p>
 				</div>
 				<div class="analytics-consent__actions">
-					<button type="button" data-analytics-choice="granted">{t('analytics.allow')}</button>
-					<button type="button" data-analytics-choice="denied">{t('analytics.deny')}</button>
+					<UiButton variant="primary" size="small" data-analytics-choice="granted">{t('analytics.allow')}</UiButton>
+					<UiButton variant="secondary" size="small" data-analytics-choice="denied">{t('analytics.deny')}</UiButton>
 				</div>
 			</aside>
 

@@ -15,13 +15,13 @@ const localizedHref = useTranslatedPath(locale);
 				<img class="site-brand__wordmark" src={refractWordmark.src} alt="Refract" />
 			</a>
 		</h2>
-		<div>
-			<HeaderLink href={localizedHref('')}>{t('nav.home')}</HeaderLink>
-			<HeaderLink href={localizedHref('projects')}>{t('nav.projects')}</HeaderLink>
-			<HeaderLink href={localizedHref('blog')}>{t('nav.blog')}</HeaderLink>
-			<HeaderLink href={localizedHref('about')}>{t('nav.about')}</HeaderLink>
-			<HeaderLink href={localizedHref('contact')}>{t('nav.contact')}</HeaderLink>
-		</div>
+		<ul aria-label="Primary navigation">
+			<li><HeaderLink href={localizedHref('')}>{t('nav.home')}</HeaderLink></li>
+			<li><HeaderLink href={localizedHref('projects')}>{t('nav.projects')}</HeaderLink></li>
+			<li><HeaderLink href={localizedHref('blog')}>{t('nav.blog')}</HeaderLink></li>
+			<li><HeaderLink href={localizedHref('about')}>{t('nav.about')}</HeaderLink></li>
+			<li><HeaderLink href={localizedHref('contact')}>{t('nav.contact')}</HeaderLink></li>
+		</ul>
 	</nav>
 </header>
 
@@ -62,15 +62,34 @@ const localizedHref = useTranslatedPath(locale);
 		}
 	};
 
-	const updateHeader = () => {
+	const updateHeaderDensity = () => {
 		const header = document.querySelector<HTMLElement>('[data-site-header]');
-		header?.toggleAttribute('data-scrolled', window.scrollY > 16);
+		if (!header) return;
+
+		const scrollY = window.scrollY;
+		const density = scrollY >= 100 ? 'compact' : scrollY >= 40 ? 'mid' : scrollY >= 20 ? 'near' : '';
+		header.toggleAttribute('data-scrolled', Boolean(density));
+		if (density) header.dataset.headerDensity = density;
+		else delete header.dataset.headerDensity;
+	};
+
+	const updateHeader = () => {
+		updateHeaderDensity();
 		updateActiveLinks();
+	};
+
+	let scrollFrame = 0;
+	const handleScroll = () => {
+		if (scrollFrame) return;
+		scrollFrame = window.requestAnimationFrame(() => {
+			scrollFrame = 0;
+			updateHeaderDensity();
+		});
 	};
 
 	const windowWithHeaderSetup = window as Window & { refractHeaderSetup?: boolean };
 	if (!windowWithHeaderSetup.refractHeaderSetup) {
-		window.addEventListener('scroll', updateHeader, { passive: true });
+		window.addEventListener('scroll', handleScroll, { passive: true });
 		document.addEventListener('astro:page-load', updateHeader);
 		document.addEventListener('click', preventSameRouteNavigation, true);
 		windowWithHeaderSetup.refractHeaderSetup = true;

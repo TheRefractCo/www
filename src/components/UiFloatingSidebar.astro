@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import UiSidebar from './UiSidebar.astro';
+
+interface Props extends HTMLAttributes<'aside'> {
+	label: string;
+	className?: string;
+}
+
+const { label, class: classAttribute, className, ...attributes } = Astro.props;
+const classes = ['ui-floating-sidebar', classAttribute, className].filter(Boolean).join(' ');
+---
+
+<UiSidebar label={label} className={classes} {...attributes}>
+	<slot />
+</UiSidebar>

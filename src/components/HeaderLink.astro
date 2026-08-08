@@ -21,7 +21,7 @@ const isActive =
 	href={href}
 	data-header-link
 	aria-current={isActive ? 'page' : undefined}
-	class:list={[className, { active: isActive }]}
+	class:list={['site-header__link', className, { active: isActive }]}
 	{...props}
 >
 	<slot />

@@ -1,6 +1,7 @@
 ---
 import { getLangFromUrl, getRouteFromUrl, localeList, useTranslatedPath, useTranslations } from '../i18n/utils';
 import { languages } from '../i18n/ui';
+import UiSelect from './UiSelect.astro';
 
 const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 const route = getRouteFromUrl(Astro.url, Astro.currentLocale);
@@ -14,9 +15,9 @@ const options = localeList.map((value) => ({
 ---
 
 <form class="footer-language" data-language-picker>
-	<label for="footer-language-select">{t('footer.language')}</label>
-	<select
+	<UiSelect
 		id="footer-language-select"
+		label={t('footer.language')}
 		aria-label={t('footer.languageHint')}
 		data-language-select
 	>
@@ -25,9 +26,9 @@ const options = localeList.map((value) => ({
 				{option.label}
 			</option>
 		))}
-	</select>
+	</UiSelect>
 	<noscript>
-		<span class="footer-language__noscript-label">{t('footer.language')}:</span>
+		<span class="footer-language__noscript">{t('footer.language')}:</span>
 		{options.map((option) => (
 			<a href={option.href} aria-current={option.value === locale ? 'page' : undefined}>
 				{option.label}

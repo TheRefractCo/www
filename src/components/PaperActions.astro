@@ -1,6 +1,7 @@
 ---
 import { getLangFromUrl, useTranslatedPath, useTranslations } from '../i18n/utils';
 import { localeMetadata } from '../i18n/ui';
+import UiButton from './UiButton.astro';
 
 interface Props {
 	campaign: string;
@@ -40,34 +41,34 @@ const storeUrl = `https://apps.microsoft.com/detail/9pjkn3wdpm1b?cid=${encodeURI
 	>
 	</ms-store-badge>
 	<noscript>
-		<a
-			class="round-action round-action--store-fallback"
+		<UiButton
+			variant="primary"
 			href={storeUrl}
 			data-analytics-event="paper_store_click"
 			data-analytics-action="store_fallback"
 			data-analytics-location={campaign}
 		>
 			{t('paper.actions.storeFallback')} <span aria-hidden="true">↗</span>
-		</a>
+		</UiButton>
 	</noscript>
-	<a
-		class="round-action round-action--quiet"
+	<UiButton
+		variant="quiet"
 		href={storeUrl}
 		data-analytics-event="paper_store_click"
 		data-analytics-action="store_link"
 		data-analytics-location={campaign}
 	>
 		{t('paper.actions.store')} <span aria-hidden="true">↗</span>
-	</a>
-	<a
-		class="round-action round-action--paper"
+	</UiButton>
+	<UiButton
+		variant="primary"
 		href={resolvedThirdHref}
 		data-analytics-event="paper_detail_click"
 		data-analytics-action={resolvedThirdLabel}
 		data-analytics-location={campaign}
 	>
 		{resolvedThirdLabel} <span aria-hidden="true">→</span>
-	</a>
+	</UiButton>
 </div>
 
 {

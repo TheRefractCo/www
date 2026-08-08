@@ -5,6 +5,9 @@ import '../styles/product-pages.css';
 import '../styles/paper-docs.css';
 import type { PaperDocsNavEntry } from '../types/paper-docs';
 import type { Locale } from '../i18n/ui';
+import UiFab from './UiFab.astro';
+import UiIconButton from './UiIconButton.astro';
+import UiFloatingSidebar from './UiFloatingSidebar.astro';
 
 interface Props {
 	entries: PaperDocsNavEntry[];
@@ -36,28 +39,27 @@ const docHref = (id: string) => localizedHref(`paper/docs/${id}`);
 ---
 
 <div class="paper-docs" data-paper-docs data-docs-locale={locale} data-search-one={t('docs.search.one')} data-search-many={t('docs.search.many')}>
-	<button
-		class="paper-docs__menu-toggle"
-		type="button"
+	<UiFab
+		className="paper-docs__menu-toggle"
 		aria-controls="paper-docs-sidebar"
 		aria-expanded="false"
 		data-docs-menu-toggle
 	>
 		<Menu size={21} strokeWidth={1.8} aria-hidden="true" />
 		<span>{t('docs.shell.menu')}</span>
-	</button>
+	</UiFab>
 
 	<div class="paper-docs__backdrop" data-docs-backdrop></div>
 
-	<aside class="paper-docs__sidebar" id="paper-docs-sidebar" data-docs-sidebar aria-label={t('docs.shell.title')}>
+	<UiFloatingSidebar className="paper-docs__sidebar" id="paper-docs-sidebar" data-docs-sidebar label={t('docs.shell.title')}>
 		<div class="paper-docs__sidebar-heading">
 			<div>
 				<p class="paper-kicker">{t('docs.shell.kicker')}</p>
 				<strong>{t('docs.shell.title')}</strong>
 			</div>
-			<button class="paper-docs__close" type="button" aria-label={t('docs.shell.close')} data-docs-close>
+			<UiIconButton className="paper-docs__close" label={t('docs.shell.close')} data-docs-close>
 				<X size={19} strokeWidth={1.8} aria-hidden="true" />
-			</button>
+			</UiIconButton>
 		</div>
 
 		<form class="paper-docs__search" role="search" data-docs-search>
@@ -75,9 +77,28 @@ const docHref = (id: string) => localizedHref(`paper/docs/${id}`);
 			</div>
 			<p class="paper-docs__search-status" data-docs-search-status aria-live="polite"></p>
 		</form>
+		<noscript>
+			<p class="paper-docs__search-noscript">Browse the guides below to find a topic.</p>
+			<style>
+				@media (max-width: 64rem) {
+					.paper-docs .paper-docs__menu-toggle,
+					.paper-docs .paper-docs__close,
+					.paper-docs__backdrop,
+					.paper-docs__search { display: none !important; }
+
+					.paper-docs__sidebar {
+						position: static !important;
+						width: auto !important;
+						max-height: none !important;
+						margin-bottom: var(--space-6);
+						transform: none !important;
+					}
+				}
+			</style>
+		</noscript>
 
 		<nav class="paper-docs__nav" data-docs-nav>
-			<a class="paper-docs__all-link" href={docsHomeHref} class:list={{ 'is-active': !currentId }}>
+			<a class:list={['paper-docs__all-link', 'ui-nav-item', { 'is-active': !currentId }]} href={docsHomeHref}>
 				<span>{t('docs.shell.home')}</span>
 				<ChevronRight size={16} strokeWidth={1.8} aria-hidden="true" />
 			</a>
@@ -85,7 +106,7 @@ const docHref = (id: string) => localizedHref(`paper/docs/${id}`);
 			{categories.map((category) => (
 				<section class="paper-docs__category">
 					<a
-						class="paper-docs__category-link"
+						class="paper-docs__category-link ui-nav-item"
 						href={docHref(category.overview.id)}
 						class:list={{ 'is-active': currentId === category.overview.id }}
 					>
@@ -130,7 +151,7 @@ const docHref = (id: string) => localizedHref(`paper/docs/${id}`);
 			<ArrowLeft size={16} strokeWidth={1.8} aria-hidden="true" />
 			{t('docs.shell.back')}
 		</a>
-	</aside>
+	</UiFloatingSidebar>
 
 	<section class="paper-docs__main">
 		<slot />

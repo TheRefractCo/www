@@ -26,8 +26,8 @@ export interface LightFieldController {
 
 type Rgb = readonly [number, number, number];
 
-const DEFAULT_PRIMARY = '#3bbcff';
-const DEFAULT_SECONDARY = '#8b5cff';
+const DEFAULT_PRIMARY = 'var(--color-cyan-400)';
+const DEFAULT_SECONDARY = 'var(--color-violet-400)';
 
 function parseHexColor(value: string): Rgb {
 	if (!/^#[0-9a-f]{6}$/i.test(value)) {
@@ -39,6 +39,11 @@ function parseHexColor(value: string): Rgb {
 		Number.parseInt(value.slice(3, 5), 16) / 255,
 		Number.parseInt(value.slice(5, 7), 16) / 255,
 	];
+}
+
+function resolveCssColor(root: HTMLElement, value: string): string {
+	const variable = value.match(/^var\((--[\w-]+)\)$/)?.[1];
+	return variable ? getComputedStyle(root).getPropertyValue(variable).trim() : value;
 }
 
 function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
@@ -76,8 +81,8 @@ export function createLightField(root: HTMLElement, options: LightFieldOptions =
 	let theme = options.theme ?? 'dark';
 	let primaryHex = options.primary ?? DEFAULT_PRIMARY;
 	let secondaryHex = options.secondary ?? DEFAULT_SECONDARY;
-	let primary = parseHexColor(primaryHex);
-	let secondary = parseHexColor(secondaryHex);
+	let primary = parseHexColor(resolveCssColor(root, primaryHex));
+	let secondary = parseHexColor(resolveCssColor(root, secondaryHex));
 	let dualColor = options.dualColor ?? false;
 	let interactive = options.interactive ?? true;
 	let forcedFallback = options.quality === 'fallback';
@@ -104,8 +109,8 @@ export function createLightField(root: HTMLElement, options: LightFieldOptions =
 			requestDraw();
 		},
 		setColors(nextPrimary, nextSecondary = secondaryHex) {
-			primary = parseHexColor(nextPrimary);
-			secondary = parseHexColor(nextSecondary);
+			primary = parseHexColor(resolveCssColor(root, nextPrimary));
+			secondary = parseHexColor(resolveCssColor(root, nextSecondary));
 			primaryHex = nextPrimary;
 			secondaryHex = nextSecondary;
 			applyPresentation();

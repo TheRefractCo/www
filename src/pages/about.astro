@@ -1,7 +1,9 @@
 ---
 import SocialLinks from '../components/SocialLinks.astro';
+import LightFieldContent from '../components/LightFieldContent.astro';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import UiButton from '../components/UiButton.astro';
 import { defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/info-pages.css';
@@ -20,8 +22,8 @@ const localizedHref = useTranslatedPath(locale);
 	<div class="info-page about-page">
 		<LightFieldHero
 			className="info-hero info-hero--about"
-			primary="#c0ff70"
-			secondary="#5fd3ff"
+			primary="var(--color-lime-400)"
+			secondary="var(--color-cyan-400)"
 			labelledBy="about-title"
 		>
 			<p class="eyebrow">About</p>
@@ -32,6 +34,7 @@ const localizedHref = useTranslatedPath(locale);
 			</p>
 		</LightFieldHero>
 
+		<LightFieldContent className="info-field-content">
 		<section class="about-story" aria-labelledby="about-story-title">
 			<div>
 				<p class="eyebrow">Our story</p>
@@ -46,7 +49,7 @@ const localizedHref = useTranslatedPath(locale);
 					We care about the small details, keep privacy in the foundation, and choose
 					calm, focused design over noise.
 				</p>
-				<a class="info-cta" href={localizedHref('contact')}>Get in touch <span aria-hidden="true">→</span></a>
+				<UiButton href={localizedHref('contact')}>Get in touch <span aria-hidden="true">→</span></UiButton>
 			</div>
 		</section>
 
@@ -57,5 +60,6 @@ const localizedHref = useTranslatedPath(locale);
 			</div>
 			<SocialLinks className="page-social-links" />
 		</section>
+		</LightFieldContent>
 	</div>
 </RefractBaseLayout>

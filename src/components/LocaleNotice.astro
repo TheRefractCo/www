@@ -1,5 +1,6 @@
 ---
 import { Languages } from '@lucide/astro';
+import UiTextLink from './UiTextLink.astro';
 
 interface Props {
 	title: string;
@@ -17,5 +18,5 @@ const { title, message, englishHref, linkLabel } = Astro.props;
 		<strong>{title}</strong>
 		<p>{message}</p>
 	</div>
-	<a href={englishHref}>{linkLabel} <span aria-hidden="true">↗</span></a>
+	<UiTextLink href={englishHref}>{linkLabel} <span aria-hidden="true">↗</span></UiTextLink>
 </aside>

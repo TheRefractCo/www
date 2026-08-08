@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import UiIconButton from './UiIconButton.astro';
 
 interface Props {
 	title: string;
@@ -16,26 +17,26 @@ const t = useTranslations(getLangFromUrl(Astro.url, Astro.currentLocale));
 	<header class="snap-carousel__header">
 		<h3>{title}</h3>
 		<div class="snap-carousel__controls" aria-label={`${label} ${t('carousel.controls')}`}>
-			<button
-				type="button"
+			<UiIconButton
+				label={`${t('carousel.previous')} in ${label}`}
+				className="snap-carousel__control"
 				data-carousel-back
 				data-analytics-event="carousel_control"
 				data-analytics-carousel={label}
 				data-analytics-direction="previous"
-				aria-label={`${t('carousel.previous')} in ${label}`}
 			>
 				←
-			</button>
-			<button
-				type="button"
+			</UiIconButton>
+			<UiIconButton
+				label={`${t('carousel.next')} in ${label}`}
+				className="snap-carousel__control"
 				data-carousel-next
 				data-analytics-event="carousel_control"
 				data-analytics-carousel={label}
 				data-analytics-direction="next"
-				aria-label={`${t('carousel.next')} in ${label}`}
 			>
 				→
-			</button>
+			</UiIconButton>
 		</div>
 	</header>
 	<div class="snap-carousel__rail" data-carousel-rail tabindex="0">

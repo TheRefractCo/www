@@ -128,17 +128,17 @@ const pageTransition = {
 
 <script define:vars={{ supportedLocaleCodes: localeList }}>
 	const prepareStaggeredHeadings = () => {
-		document.querySelectorAll<HTMLHeadingElement>('h1').forEach((heading) => {
+		document.querySelectorAll('h1').forEach((heading) => {
 			if (heading.dataset.staggeredHeading === 'true') return;
 
-			const accessibleHeading = heading.cloneNode(true) as HTMLHeadingElement;
+			const accessibleHeading = heading.cloneNode(true);
 			accessibleHeading.querySelectorAll('br').forEach((breakElement) => breakElement.replaceWith(' '));
 			const accessibleLabel = accessibleHeading.textContent?.replace(/\s+/g, ' ').trim();
 			if (!accessibleLabel) return;
 
 			const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
-			const textNodes: Text[] = [];
-			while (walker.nextNode()) textNodes.push(walker.currentNode as Text);
+			const textNodes = [];
+			while (walker.nextNode()) textNodes.push(walker.currentNode);
 
 			let wordIndex = 0;
 			textNodes.forEach((textNode) => {
@@ -169,7 +169,7 @@ const pageTransition = {
 		});
 	};
 
-	const windowWithHeadingSetup = window as Window & { refractHeadingSetup?: boolean };
+	const windowWithHeadingSetup = window;
 	if (!windowWithHeadingSetup.refractHeadingSetup) {
 		document.addEventListener('astro:page-load', prepareStaggeredHeadings);
 		windowWithHeadingSetup.refractHeadingSetup = true;
@@ -177,12 +177,12 @@ const pageTransition = {
 	prepareStaggeredHeadings();
 
 	const routeOrder = ['/', '/projects/', '/blog/', '/about/', '/contact/'];
-	const logicalPathname = (pathname: string) => {
+	const logicalPathname = (pathname) => {
 		const parts = pathname.split('/').filter(Boolean);
 		if (supportedLocaleCodes.includes(parts[0])) parts.shift();
 		return `/${parts.join('/')}/`.replace('//', '/') || '/';
 	};
-	const routeIndex = (pathname: string) => {
+	const routeIndex = (pathname) => {
 		const normalized = logicalPathname(pathname).replace(/\/+$/, '') || '/';
 		const index = routeOrder.findIndex((route) => {
 			const normalizedRoute = route.replace(/\/+$/, '') || '/';
@@ -191,7 +191,7 @@ const pageTransition = {
 		return index;
 	};
 
-	const windowWithTransitionSetup = window as Window & { refractTransitionSetup?: boolean };
+	const windowWithTransitionSetup = window;
 	if (!windowWithTransitionSetup.refractTransitionSetup) {
 		document.addEventListener('astro:before-preparation', (event) => {
 			if (event.navigationType !== 'push') return;

@@ -1,11 +1,11 @@
 .lightfield {
-	--lightfield-primary: #3bbcff;
-	--lightfield-secondary: #3bbcff;
+	--lightfield-primary: var(--color-cyan-400);
+	--lightfield-secondary: var(--color-violet-400);
 	position: absolute;
 	inset: 0;
 	isolation: isolate;
 	overflow: hidden;
-	background: var(--background, var(--lightfield-dark-background, #020715));
+	background: var(--lightfield-dark-background);
 }
 
 .lightfield__canvas,
@@ -31,19 +31,13 @@
 	z-index: 0;
 	overflow: hidden;
 	pointer-events: none;
-	opacity: 1;
 	background:
-		radial-gradient(
-			ellipse 54% 46% at 94% 53%,
-			color-mix(in srgb, var(--lightfield-secondary) 34%, transparent),
-			transparent 76%
-		),
-		linear-gradient(169deg, var(--background) 14%, color-mix(in srgb, var(--background) 84%, #071630) 49%, color-mix(in srgb, var(--background) 76%, #071b3e) 75%, var(--background) 100%);
-	transition: opacity 0.35s ease;
+		radial-gradient(ellipse 54% 46% at 94% 53%, color-mix(in srgb, var(--lightfield-secondary) 34%, transparent), transparent 76%),
+		linear-gradient(169deg, var(--lightfield-dark-background) 14%, var(--lightfield-ink-mid) 49%, var(--lightfield-ink-deep) 75%, var(--lightfield-dark-background) 100%);
+	transition: opacity var(--motion-standard);
 }
 
-.lightfield[data-lightfield-ready='true']:not([data-fallback='true']):not([data-force-fallback])
-	.lightfield__fallback {
+.lightfield[data-lightfield-ready='true']:not([data-fallback='true']):not([data-force-fallback]) .lightfield__fallback {
 	opacity: 0;
 }
 
@@ -56,15 +50,8 @@
 	position: absolute;
 	inset: -16% -10%;
 	content: '';
-	background: linear-gradient(
-		169deg,
-		transparent 26%,
-		color-mix(in srgb, var(--lightfield-primary) 34%, transparent) 43%,
-		color-mix(in srgb, var(--lightfield-secondary) 46%, transparent) 55%,
-		color-mix(in srgb, var(--lightfield-secondary) 12%, transparent) 68%,
-		transparent 78%
-	);
-	filter: blur(24px);
+	background: linear-gradient(169deg, transparent 26%, color-mix(in srgb, var(--lightfield-primary) 34%, transparent) 43%, color-mix(in srgb, var(--lightfield-secondary) 46%, transparent) 55%, color-mix(in srgb, var(--lightfield-secondary) 12%, transparent) 68%, transparent 78%);
+	filter: blur(1.5rem);
 	transform: translate3d(2%, 0, 0) scale(1.08);
 }
 
@@ -78,12 +65,7 @@
 		radial-gradient(circle, var(--lightfield-secondary) 0 0.8px, transparent 1.55px);
 	background-position: 9px 13px, 31px 7px;
 	background-size: 47px 53px, 73px 67px;
-	mask-image: radial-gradient(
-		ellipse 72% 68% at 84% 53%,
-		#000 8%,
-		rgba(0, 0, 0, 0.82) 44%,
-		transparent 82%
-	);
+	mask-image: radial-gradient(ellipse 72% 68% at 84% 53%, var(--color-black) 8%, var(--mask-strong) 44%, transparent 82%);
 	animation: lightfield-fallback-drift 18s linear infinite alternate;
 }
 
@@ -102,24 +84,20 @@
 
 .lightfield[data-theme='light'],
 .lightfield[data-theme='auto'] {
-	background: var(--lightfield-light-background, #e3e9ed);
+	background: var(--lightfield-light-background);
 }
 
 .lightfield[data-theme='light'] .lightfield__fallback,
 .lightfield[data-theme='auto'] .lightfield__fallback {
 	background:
-		radial-gradient(
-			ellipse 52% 44% at 94% 53%,
-			color-mix(in srgb, var(--lightfield-secondary) 24%, transparent),
-			transparent 76%
-		),
-		linear-gradient(169deg, #f5f7f8 12%, #e8eff2 52%, #dce9ee 78%, #eef3f5 100%);
+		radial-gradient(ellipse 52% 44% at 94% 53%, color-mix(in srgb, var(--lightfield-secondary) 24%, transparent), transparent 76%),
+		linear-gradient(169deg, var(--lightfield-light-start) 12%, var(--lightfield-light-mid) 52%, var(--lightfield-light-end) 78%, var(--lightfield-light-start) 100%);
 }
 
 .lightfield[data-theme='light'] .lightfield__fallback::before,
 .lightfield[data-theme='auto'] .lightfield__fallback::before {
 	opacity: 0.76;
-	filter: blur(18px);
+	filter: blur(1.125rem);
 }
 
 .lightfield[data-theme='light'] .lightfield__dust,
@@ -130,22 +108,18 @@
 
 @media (prefers-color-scheme: dark) {
 	.lightfield[data-theme='auto'] {
-		background: var(--lightfield-dark-background, #020715);
+		background: var(--lightfield-dark-background);
 	}
 
 	.lightfield[data-theme='auto'] .lightfield__fallback {
 		background:
-			radial-gradient(
-				ellipse 54% 46% at 94% 53%,
-				color-mix(in srgb, var(--lightfield-secondary) 34%, transparent),
-				transparent 76%
-			),
-			linear-gradient(169deg, #020715 14%, #071630 49%, #071b3e 75%, #03091c 100%);
+			radial-gradient(ellipse 54% 46% at 94% 53%, color-mix(in srgb, var(--lightfield-secondary) 34%, transparent), transparent 76%),
+			linear-gradient(169deg, var(--lightfield-dark-background) 14%, var(--lightfield-ink-mid) 49%, var(--lightfield-ink-deep) 75%, var(--lightfield-dark-background) 100%);
 	}
 
 	.lightfield[data-theme='auto'] .lightfield__fallback::before {
 		opacity: 1;
-		filter: blur(24px);
+		filter: blur(1.5rem);
 	}
 
 	.lightfield[data-theme='auto'] .lightfield__dust {
@@ -157,16 +131,5 @@
 @keyframes lightfield-fallback-drift {
 	to {
 		transform: translate3d(2.5%, -1.5%, 0);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.lightfield__canvas,
-	.lightfield__fallback {
-		transition-duration: 0.01ms;
-	}
-
-	.lightfield__dust {
-		animation: none;
 	}
 }

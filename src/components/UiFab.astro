@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import UiButton from './UiButton.astro';
+
+interface Props extends HTMLAttributes<'button'> {
+	href?: string;
+	className?: string;
+}
+
+const { href, class: classAttribute, className, ...attributes } = Astro.props;
+const classes = ['ui-fab', classAttribute, className].filter(Boolean).join(' ');
+---
+
+<UiButton href={href} className={classes} size="small" {...attributes}>
+	<slot />
+</UiButton>

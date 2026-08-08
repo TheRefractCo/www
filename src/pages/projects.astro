@@ -5,11 +5,13 @@ import refractWordmark from '../assets/brand/refract-wordmark-white.svg';
 import siteContact from '../assets/projects/site/site-contact.png';
 import siteHome from '../assets/projects/site/site-home.png';
 import sitePrivacy from '../assets/projects/site/site-privacy.png';
+import LightFieldContent from '../components/LightFieldContent.astro';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import PaperActions from '../components/PaperActions.astro';
 import PaperScreenshotRail from '../components/PaperScreenshotRail.astro';
 import SnapCarousel from '../components/SnapCarousel.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import UiButton from '../components/UiButton.astro';
 import { defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/product-pages.css';
@@ -21,14 +23,14 @@ const localizedHref = useTranslatedPath(locale);
 <RefractBaseLayout
 	title="Projects | The Refract Co."
 	description="Explore Paper and the small, carefully made projects from The Refract Co."
-	pageClass="wide-page projects-shell"
+	pageClass="projects-shell"
 	noIndex={locale !== defaultLang}
 >
 	<div class="projects-page">
 		<LightFieldHero
 			className="projects-intro"
-			primary="#7cf4c9"
-			secondary="#7094ff"
+			primary="var(--color-mint-400)"
+			secondary="var(--color-blue-500)"
 			labelledBy="projects-title"
 		>
 			<p class="product-kicker">The work</p>
@@ -39,6 +41,7 @@ const localizedHref = useTranslatedPath(locale);
 			</p>
 		</LightFieldHero>
 
+		<LightFieldContent className="projects-field-content" aria-label="Projects">
 		<article id="paper" class="project-feature project-feature--paper">
 			<header class="project-feature__header">
 				<div class="project-feature__identity">
@@ -75,9 +78,10 @@ const localizedHref = useTranslatedPath(locale);
 			</header>
 
 			<div class="website-actions">
-				<a class="round-action round-action--light" href={localizedHref('')}>Visit the homepage <span aria-hidden="true">↗</span></a>
-				<a class="round-action round-action--outline-light" href={localizedHref('blog')}>Read the blog <span aria-hidden="true">→</span></a>
-				<a class="round-action round-action--outline-light" href={localizedHref('about')}>About Refract <span aria-hidden="true">→</span></a>
+				<UiButton variant="inverse" href={localizedHref('')}>Visit the homepage <span aria-hidden="true">↗</span></UiButton>
+				<UiButton variant="outline-inverse" href={localizedHref('blog')}>Read the blog <span aria-hidden="true">→</span></UiButton>
+				<UiButton variant="outline-inverse" href={localizedHref('ux/gallery')}>View the UX gallery <span aria-hidden="true">→</span></UiButton>
+				<UiButton variant="outline-inverse" href={localizedHref('about')}>About Refract <span aria-hidden="true">→</span></UiButton>
 			</div>
 
 			<SnapCarousel title="A few corners of the site" label="Website page previews" className="website-carousel">
@@ -101,5 +105,6 @@ const localizedHref = useTranslatedPath(locale);
 				</figure>
 			</SnapCarousel>
 		</article>
+		</LightFieldContent>
 	</div>
 </RefractBaseLayout>

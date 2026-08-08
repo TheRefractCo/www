@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'aside'> {
+	label: string;
+	className?: string;
+}
+
+const { label, class: classAttribute, className, ...attributes } = Astro.props;
+---
+
+<aside aria-label={label} class:list={['ui-sidebar', classAttribute, className]} {...attributes}>
+	<slot />
+</aside>

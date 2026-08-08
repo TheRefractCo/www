@@ -21,6 +21,7 @@ import LocaleNotice from './LocaleNotice.astro';
 import PaperActions from './PaperActions.astro';
 import PaperScreenshotRail from './PaperScreenshotRail.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import UiTextLink from './UiTextLink.astro';
 import '../styles/product-pages.css';
 
 const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
@@ -33,7 +34,7 @@ const docsHref = localizedHref('paper/docs');
 <RefractBaseLayout
 	title={t('paper.title')}
 	description={t('paper.description')}
-	pageClass="wide-page paper-shell"
+	pageClass="paper-shell"
 >
 	<div class="paper-page">
 		{locale !== defaultLang && (
@@ -58,10 +59,10 @@ const docsHref = localizedHref('paper/docs');
 					thirdHref="#features"
 					thirdLabel={t('paper.actions.explore')}
 				/>
-				<a class="paper-docs-quicklink text-link text-link--paper" href={docsHref}>
+				<UiTextLink className="paper-docs-quicklink" href={docsHref}>
 					<BookOpen size={17} strokeWidth={1.8} aria-hidden="true" />
 					{t('paper.docsLink')} <span aria-hidden="true">→</span>
-				</a>
+				</UiTextLink>
 			</div>
 			<div class="paper-hero__visual">
 				<Image

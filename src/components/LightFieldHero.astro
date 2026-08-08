@@ -2,11 +2,12 @@
 import type { LightFieldQuality, LightFieldTheme } from '../scripts/lightfield';
 
 interface Props {
-	primary: string;
-	secondary: string;
+	primary: `var(--${string})`;
+	secondary: `var(--${string})`;
 	theme?: LightFieldTheme | 'auto';
 	quality?: LightFieldQuality;
 	interactive?: boolean;
+	verticalAlign?: 'top' | 'center';
 	className?: string;
 	labelledBy?: string;
 }
@@ -17,6 +18,7 @@ const {
 	theme = 'auto',
 	quality = 'auto',
 	interactive = true,
+	verticalAlign = 'top',
 	className,
 	labelledBy,
 } = Astro.props;
@@ -30,6 +32,7 @@ const {
 	data-lightfield-theme={theme}
 	data-lightfield-quality={quality}
 	data-lightfield-interactive={interactive ? 'true' : 'false'}
+	data-lightfield-align={verticalAlign}
 >
 	<div
 		class="lightfield"
@@ -53,16 +56,18 @@ const {
 	<div class="lightfield-hero__content">
 		<slot />
 	</div>
+	<slot name="overlay" />
 </section>
 
 <style>
 	.lightfield-hero {
 		position: relative;
+		display: grid;
 		width: 100vw;
 		min-block-size: 100svh;
 		max-width: none;
-		margin-block-start: calc(-1 * var(--page-gutter, 1.5rem));
 		margin-inline-start: calc(50% - 50vw);
+		align-items: start;
 		isolation: isolate;
 		overflow: hidden;
 	}
@@ -71,7 +76,7 @@ const {
 		position: absolute;
 		z-index: 1;
 		inset: auto 0 0;
-		height: 20%;
+		height: 45%;
 		pointer-events: none;
 		content: '';
 		background: linear-gradient(to bottom, transparent, var(--background));
@@ -80,6 +85,18 @@ const {
 	.lightfield-hero__content {
 		position: relative;
 		z-index: 2;
+		width: min(calc(100% - (var(--page-gutter) * 2)), var(--page-width));
+		margin: calc(var(--header-height) + clamp(2rem, 7vh, 5rem)) auto 0;
+		padding: 0;
+		color: var(--text-primary);
+	}
+
+	.lightfield-hero[data-lightfield-align='center'] {
+		align-items: center;
+	}
+
+	.lightfield-hero[data-lightfield-align='center'] .lightfield-hero__content {
+		margin: 0 auto;
 	}
 </style>
 

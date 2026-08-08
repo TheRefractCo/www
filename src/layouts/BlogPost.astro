@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import LightFieldContent from '../components/LightFieldContent.astro';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from './RefractBaseLayout.astro';
 import { defaultLang } from '../i18n/ui';
@@ -24,8 +25,8 @@ const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 	<article class="blog-post">
 		<LightFieldHero
 			className="blog-post-hero"
-			primary="#7aa8ff"
-			secondary="#d08bff"
+			primary="var(--color-blue-500)"
+			secondary="var(--color-violet-400)"
 		>
 			<p class="eyebrow">The blog</p>
 			<p class="blog-post-hero__date">
@@ -34,7 +35,9 @@ const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 			</p>
 			<h1>{title}</h1>
 		</LightFieldHero>
+		<LightFieldContent className="blog-field-content">
 		{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
 		<div class="blog-post__body"><slot /></div>
+		</LightFieldContent>
 	</article>
 </RefractBaseLayout>

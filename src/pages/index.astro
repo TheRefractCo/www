@@ -5,6 +5,7 @@ import paperOverview from '../assets/projects/paper/paper-overview.png';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import PaperActions from '../components/PaperActions.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import UiTextLink from '../components/UiTextLink.astro';
 import { defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/product-pages.css';
@@ -22,8 +23,9 @@ const localizedHref = useTranslatedPath(locale);
 	<div class="home-page">
 		<LightFieldHero
 			className="home-hero"
-			primary="#5ee7ff"
-			secondary="#9f7bff"
+			primary="var(--color-cyan-400)"
+			secondary="var(--color-violet-400)"
+			verticalAlign="center"
 			labelledBy="home-title"
 		>
 			<div class="home-hero__content">
@@ -33,12 +35,12 @@ const localizedHref = useTranslatedPath(locale);
 					pleasant, and respectful of your attention.
 				</p>
 				<div class="home-hero__links">
-					<a class="text-link" href={localizedHref('about')}>About Refract <span aria-hidden="true">→</span></a>
-					<a class="text-link" href={localizedHref('blog')}>Read the blog <span aria-hidden="true">→</span></a>
+					<UiTextLink href={localizedHref('about')}>About Refract <span aria-hidden="true">→</span></UiTextLink>
+					<UiTextLink href={localizedHref('blog')}>Read the blog <span aria-hidden="true">→</span></UiTextLink>
 				</div>
 			</div>
 
-			<a class="scroll-cue" href="#projects-preview" aria-label="Scroll to featured projects">
+			<a slot="overlay" class="scroll-cue" href="#projects-preview" aria-label="Scroll to featured projects">
 				<span>See what we make</span>
 				<b aria-hidden="true">↓</b>
 			</a>
@@ -50,7 +52,7 @@ const localizedHref = useTranslatedPath(locale);
 					<p class="product-kicker">Selected projects</p>
 					<h2 id="home-projects-title">Made with care.<br />Kept intentionally small.</h2>
 				</div>
-				<a class="text-link" href={localizedHref('projects')}>All projects <span aria-hidden="true">→</span></a>
+				<UiTextLink href={localizedHref('projects')}>All projects <span aria-hidden="true">→</span></UiTextLink>
 			</header>
 
 			<article class="home-project home-project--paper">
@@ -74,9 +76,9 @@ const localizedHref = useTranslatedPath(locale);
 					<p class="product-kicker">This website</p>
 					<h3>A quieter home on the web.</h3>
 					<p>Fast, static, and focused on the work—with no accounts and only optional, consent-based analytics.</p>
-					<a class="text-link text-link--light" href={`${localizedHref('projects')}#refract-website`}>
+					<UiTextLink className="home-project__link" href={`${localizedHref('projects')}#refract-website`}>
 						How it was made <span aria-hidden="true">→</span>
-					</a>
+					</UiTextLink>
 				</div>
 				<div class="home-site-preview" aria-hidden="true">
 					<span>refract.fyi</span>

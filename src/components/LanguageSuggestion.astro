@@ -2,6 +2,8 @@
 import { Languages, X } from '@lucide/astro';
 import { defaultLang, languages } from '../i18n/ui';
 import { getLangFromUrl, getRouteFromUrl, localeList, useTranslatedPath, useTranslations } from '../i18n/utils';
+import UiButton from './UiButton.astro';
+import UiIconButton from './UiIconButton.astro';
 
 const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 const route = getRouteFromUrl(Astro.url, Astro.currentLocale);
@@ -13,7 +15,7 @@ const paths = Object.fromEntries(
 ---
 
 <dialog
-	class="language-suggestion"
+	class="ui-dialog language-suggestion"
 	data-language-suggestion
 	data-current-locale={locale}
 	data-default-locale={defaultLang}
@@ -26,23 +28,23 @@ const paths = Object.fromEntries(
 	<div class="language-suggestion__header">
 		<span class="language-suggestion__icon" aria-hidden="true"><Languages size={19} strokeWidth={1.8} /></span>
 		<form method="dialog">
-			<button class="language-suggestion__close" type="submit" aria-label={t('language.suggestion.close')}>
+			<UiIconButton label={t('language.suggestion.close')} type="submit">
 				<X size={18} strokeWidth={1.8} aria-hidden="true" />
-			</button>
+			</UiIconButton>
 		</form>
 	</div>
 	<p class="language-suggestion__eyebrow">{t('language.suggestion.eyebrow')}</p>
 	<h2 id="language-suggestion-title">{t('language.suggestion.title')}</h2>
 	<p id="language-suggestion-message">{t('language.suggestion.message')}</p>
 	<div class="language-suggestion__actions">
-		<a class="language-suggestion__switch" data-language-suggestion-link href={paths[defaultLang]}>
+		<UiButton className="language-suggestion__switch" variant="primary" data-language-suggestion-link href={paths[defaultLang]}>
 			<span>{t('language.suggestion.switch')}</span>
 			<strong data-language-suggestion-target>{languages[defaultLang]}</strong>
 			<span aria-hidden="true">→</span>
-		</a>
-		<button class="language-suggestion__dismiss" type="button" data-language-suggestion-dismiss>
+		</UiButton>
+		<UiButton className="language-suggestion__dismiss" variant="secondary" data-language-suggestion-dismiss>
 			{t('language.suggestion.dismiss')}
-		</button>
+		</UiButton>
 	</div>
 </dialog>
 
@@ -90,6 +92,11 @@ const paths = Object.fromEntries(
 		const dismissButton = dialog.querySelector<HTMLButtonElement>('[data-language-suggestion-dismiss]');
 
 		const detectedLocale = getBrowserLocale(supportedLocales);
+		dismissButton?.addEventListener('click', () => {
+			if (detectedLocale) setStorageValue(suggestionDismissedKey, detectedLocale);
+			dialog.close();
+		});
+
 		const explicitPreference = getStorageValue(suggestionPreferenceKey);
 		const dismissedLocale = getStorageValue(suggestionDismissedKey);
 		if (
@@ -106,11 +113,6 @@ const paths = Object.fromEntries(
 		if (targetLabel) targetLabel.textContent = labels[detectedLocale] ?? detectedLocale;
 
 		targetLink?.addEventListener('click', () => setStorageValue(suggestionPreferenceKey, detectedLocale));
-		dismissButton?.addEventListener('click', () => {
-			setStorageValue(suggestionDismissedKey, detectedLocale);
-			dialog.close();
-		});
-
 		window.setTimeout(() => {
 			if (!dialog.open) dialog.showModal();
 		}, 450);

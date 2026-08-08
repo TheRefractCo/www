@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
+import LightFieldContent from '../../components/LightFieldContent.astro';
 import LightFieldHero from '../../components/LightFieldHero.astro';
 import RefractBaseLayout from '../../layouts/RefractBaseLayout.astro';
 import { defaultLang } from '../../i18n/ui';
@@ -23,14 +24,15 @@ const localizedHref = useTranslatedPath(locale);
 >
 	<LightFieldHero
 		className="blog-hero"
-		primary="#7aa8ff"
-		secondary="#d08bff"
+		primary="var(--color-blue-500)"
+		secondary="var(--color-violet-400)"
 	>
 		<p class="eyebrow">The blog</p>
 		<h1>Notes from the work.</h1>
 		<p class="blog-hero__lead">Ideas, process, and the small details behind Refract.</p>
 	</LightFieldHero>
 
+	<LightFieldContent className="blog-field-content">
 	<div class="blog-index__bar">
 		<p>Writing from Refract.</p>
 		<a href="/rss.xml" data-astro-reload>Subscribe to the RSS feed</a>
@@ -50,4 +52,5 @@ const localizedHref = useTranslatedPath(locale);
 			))
 		}
 	</ul>
+	</LightFieldContent>
 </RefractBaseLayout>

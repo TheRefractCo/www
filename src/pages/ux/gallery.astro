@@ -1,0 +1,414 @@
+---
+import {
+	AlertCircle,
+	ArrowRight,
+	BookOpen,
+	Check,
+	ChevronRight,
+	CircleHelp,
+	Download,
+	FolderOpen,
+	Menu,
+	MoreHorizontal,
+	Plus,
+	Search,
+	Settings,
+} from '@lucide/astro';
+import RefractBaseLayout from '../../layouts/RefractBaseLayout.astro';
+import UiButton from '../../components/UiButton.astro';
+import UiFab from '../../components/UiFab.astro';
+import UiFloatingSidebar from '../../components/UiFloatingSidebar.astro';
+import UiIconButton from '../../components/UiIconButton.astro';
+import UiSelect from '../../components/UiSelect.astro';
+import UiSidebar from '../../components/UiSidebar.astro';
+import UiTextLink from '../../components/UiTextLink.astro';
+import HeaderLink from '../../components/HeaderLink.astro';
+import '../../styles/ux-gallery.css';
+
+const categories = [
+	['foundations', 'Foundations'],
+	['actions', 'Actions'],
+	['inputs', 'Inputs'],
+	['navigation', 'Navigation'],
+	['website', 'Website'],
+	['surfaces', 'Surfaces'],
+	['content', 'Content'],
+	['feedback', 'Feedback'],
+] as const;
+
+const colorTokens = [
+	'white', 'black',
+	'stone-25', 'stone-50', 'stone-100', 'stone-200', 'stone-400', 'stone-600', 'stone-800',
+	'slate-100', 'slate-300', 'slate-700', 'slate-800', 'slate-900',
+	'blue-300', 'blue-500', 'blue-700', 'cyan-400', 'violet-400', 'lime-400', 'mint-400',
+	'orange-400', 'pink-400', 'teal-300', 'green-500', 'amber-500', 'rose-500',
+	'paper-25', 'paper-50', 'paper-100', 'paper-200', 'paper-400', 'paper-700', 'paper-900',
+] as const;
+
+const layoutTokens = [
+	['Space 1', '--space-1', '0.25rem'],
+	['Space 3', '--space-3', '0.75rem'],
+	['Space 5', '--space-5', '1.25rem'],
+	['Space 8', '--space-8', '2rem'],
+	['Square', '--radius-none', '0'],
+	['Interactive', '--radius-interactive', '999px'],
+	['Emphasis', '--radius-emphasis', '1rem'],
+	['Dialog', '--radius-dialog', '1.5rem'],
+] as const;
+---
+
+<RefractBaseLayout
+	title="UX Gallery | The Refract Co."
+	description="The living component and style gallery for Refract and Paper."
+	pageClass="wide-page ux-gallery-shell"
+	footerVariant="compact"
+	noIndex={true}
+>
+	<div class="ux-gallery" data-ux-gallery>
+		<noscript>
+			<p class="ux-gallery__noscript">All component sections are shown below. Theme controls and the language-dialog preview require JavaScript.</p>
+			<style>
+				.ux-gallery__settings,
+				[data-gallery-language-dialog] { display: none !important; }
+			</style>
+		</noscript>
+		<header class="ux-gallery__header">
+			<div>
+				<p class="ui-kicker ui-kicker--accent">Refract UX</p>
+				<h1>Component gallery</h1>
+				<p>Production tokens, controls, and patterns in one inspectable surface.</p>
+			</div>
+			<div class="ux-gallery__settings" aria-label="Gallery appearance">
+				<UiSelect id="gallery-theme" label="Theme" data-gallery-theme>
+					<option value="system">System</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+				</UiSelect>
+				<UiSelect id="gallery-palette" label="Tokens" data-gallery-palette>
+					<option value="default">Refract</option>
+					<option value="paper">Paper</option>
+				</UiSelect>
+			</div>
+		</header>
+
+		<div class="ux-gallery__layout">
+			<UiSidebar className="ux-gallery__sidebar" label="Gallery categories">
+				<div class="ux-gallery__sidebar-title">
+					<FolderOpen size={18} aria-hidden="true" />
+					<strong>Browse</strong>
+				</div>
+				<nav>
+					<ul class="ui-nav-list">
+						{categories.map(([id, label], index) => (
+							<li>
+								<a
+									class="ui-nav-item"
+									href={`#${id}`}
+									data-gallery-category={id}
+									aria-current={index === 0 ? 'page' : undefined}
+								>
+									<span>{label}</span>
+									<ChevronRight size={16} aria-hidden="true" />
+								</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+				<p class="ux-gallery__sidebar-note">Changes apply only to this reference page.</p>
+			</UiSidebar>
+
+			<div class="ux-gallery__content">
+				<section id="foundations" class="gallery-panel" data-gallery-panel="foundations">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Foundations</p>
+						<h2>Tokens and base elements</h2>
+						<p>Use semantic roles such as <code>--surface-base</code> and <code>--text-primary</code> in component CSS. Primitive color values stay in the token layer and are shown here for inspection.</p>
+					</header>
+					<p class="gallery-component-label"><span>CSS API</span><code>--surface-*</code><code>--text-*</code><code>--accent-*</code><code>--border-*</code></p>
+					<div class="gallery-demo-grid gallery-demo-grid--tokens">
+						<div class="gallery-swatch" style="--swatch: var(--surface-canvas)"><span>Canvas</span><code>surface-canvas</code></div>
+						<div class="gallery-swatch" style="--swatch: var(--surface-base)"><span>Base</span><code>surface-base</code></div>
+						<div class="gallery-swatch" style="--swatch: var(--surface-subtle)"><span>Subtle</span><code>surface-subtle</code></div>
+						<div class="gallery-swatch" style="--swatch: var(--surface-strong)"><span>Strong</span><code>surface-strong</code></div>
+						<div class="gallery-swatch" style="--swatch: var(--accent-primary)"><span>Accent</span><code>accent-primary</code></div>
+						<div class="gallery-swatch" style="--swatch: var(--border-default)"><span>Border</span><code>border-default</code></div>
+					</div>
+					<section class="gallery-token-reference" aria-labelledby="color-token-title">
+						<div>
+							<h3 id="color-token-title">Color primitives</h3>
+							<p>These are the only literal color values. Components consume the semantic roles above instead.</p>
+						</div>
+						<div class="gallery-color-tokens">
+							{colorTokens.map((token) => {
+								const variable = `--color-${token}`;
+								return <div class="gallery-color-token"><span style={`--token-color: var(${variable})`} aria-hidden="true"></span><code>{variable}</code><output data-token-value={variable}></output></div>;
+							})}
+						</div>
+					</section>
+					<section class="gallery-token-reference" aria-labelledby="layout-token-title">
+						<div>
+							<h3 id="layout-token-title">Spacing and rounding</h3>
+							<p>Square is the default. Only direct actions and intentionally elevated moments gain rounding.</p>
+						</div>
+						<div class="gallery-layout-tokens">
+							{layoutTokens.map(([label, token, value]) => <div><span>{label}</span><code>{token}</code><output>{value}</output></div>)}
+						</div>
+					</section>
+					<div class="gallery-specimen">
+						<div>
+							<p class="gallery-component-label"><span>Semantic HTML + CSS</span><code>.ui-kicker</code><code>h1</code><code>h2</code><code>h3</code></p>
+							<p class="ui-kicker">Top mini all-caps header</p>
+							<h1>Heading one</h1>
+							<h2>Heading two</h2>
+							<h3>Heading three</h3>
+							<p>Body text is optimized for readable product content, not decoration.</p>
+						</div>
+						<div class="gallery-token-notes">
+							<p><strong>Square:</strong> cards, fields, tables, panels, documents.</p>
+							<p><strong>Round:</strong> every direct action, navigation item, and icon control.</p>
+							<p><strong>Medium round:</strong> only elevated cards and dialogs.</p>
+						</div>
+					</div>
+				</section>
+
+				<section id="actions" class="gallery-panel" data-gallery-panel="actions">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Actions</p>
+						<h2>Buttons, links, and states</h2>
+						<p><code>UiButton</code> emits a <code>button</code> for actions and an <code>a</code> when it receives <code>href</code>. Variants only communicate priority; they do not create product-specific button styles.</p>
+					</header>
+					<div class="gallery-group">
+						<p class="gallery-component-label"><span>UiButton.astro</span><code>.ui-button</code><code>.ui-button--&#123;variant&#125;</code><code>.ui-button--&#123;size&#125;</code></p>
+						<h3>Buttons — every variant</h3>
+						<div class="gallery-inline">
+							<UiButton><Plus size={16} aria-hidden="true" />Primary</UiButton>
+							<UiButton variant="secondary">Secondary</UiButton>
+							<UiButton variant="quiet">Quiet</UiButton>
+							<UiButton variant="danger">Danger</UiButton>
+							<UiButton size="small">Small</UiButton>
+							<UiButton disabled>Disabled</UiButton>
+						</div>
+					</div>
+					<div class="gallery-group gallery-inverse-surface">
+						<p class="gallery-component-label"><span>UiButton.astro</span><code>.ui-button--inverse</code><code>.ui-button--outline-inverse</code></p>
+						<h3>Inverse variants</h3>
+						<div class="gallery-inline">
+							<UiButton variant="inverse">Inverse</UiButton>
+							<UiButton variant="outline-inverse">Outline inverse</UiButton>
+						</div>
+					</div>
+					<div class="gallery-group">
+						<p class="gallery-component-label"><span>UiIconButton.astro + UiTextLink.astro</span><code>.ui-icon-button</code><code>.ui-text-link</code></p>
+						<h3>Icon buttons and link buttons</h3>
+						<div class="gallery-inline">
+							<UiIconButton label="Open settings"><Settings size={18} aria-hidden="true" /></UiIconButton>
+							<UiIconButton label="More options"><MoreHorizontal size={18} aria-hidden="true" /></UiIconButton>
+							<UiTextLink href="#actions">Read the guidance <ArrowRight size={16} aria-hidden="true" /></UiTextLink>
+							<UiTextLink href="#website">Website link button <ArrowRight size={16} aria-hidden="true" /></UiTextLink>
+						</div>
+					</div>
+				</section>
+
+				<section id="inputs" class="gallery-panel" data-gallery-panel="inputs">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Inputs</p>
+						<h2>Form controls</h2>
+						<p>Text fields are square document surfaces. Only controls that are directly pressed or toggled use the interactive round token.</p>
+					</header>
+					<p class="gallery-component-label"><span>UiSelect.astro + CSS primitives</span><code>.ui-field</code><code>.ui-select</code><code>.ui-input</code><code>.ui-textarea</code><code>.ui-checkbox</code><code>.ui-switch</code></p>
+					<div class="gallery-form">
+						<label class="ui-field"><span class="ui-field__label">Name</span><input class="ui-input" value="Paper library" /></label>
+						<UiSelect id="gallery-select" label="Collection"><option>Recently opened</option><option>Reading now</option><option>Archive</option></UiSelect>
+						<label class="ui-field gallery-form__wide"><span class="ui-field__label">Description</span><textarea class="ui-textarea">A concise explanation goes here.</textarea></label>
+						<label class="ui-check-row"><input class="ui-checkbox" type="checkbox" checked /> Keep downloaded copies</label>
+						<label class="ui-check-row"><span class="ui-switch"><input type="checkbox" checked /></span> Enable reading reminders</label>
+					</div>
+				</section>
+
+				<section id="navigation" class="gallery-panel" data-gallery-panel="navigation">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Navigation</p>
+						<h2>Navigation and floating controls</h2>
+						<p>Docs and the gallery use the same sidebar and list-item contracts. The floating versions add elevation and placement, not a second navigation design.</p>
+					</header>
+					<p class="gallery-component-label"><span>UiSidebar.astro + navigation CSS</span><code>.ui-sidebar</code><code>.ui-nav-list</code><code>.ui-nav-item</code><code>.ui-breadcrumb</code></p>
+					<div class="gallery-navigation-demo">
+						<UiSidebar className="gallery-navigation-demo__sidebar" label="Example navigation">
+							<div class="gallery-navigation-demo__heading"><BookOpen size={18} aria-hidden="true" /><strong>Reading guide</strong></div>
+							<nav><ul class="ui-nav-list">
+								<li><a class="ui-nav-item is-active" href="#navigation"><span>Overview</span><ChevronRight size={16} aria-hidden="true" /></a></li>
+								<li><a class="ui-nav-item" href="#navigation"><span>Annotating</span><ChevronRight size={16} aria-hidden="true" /></a></li>
+								<li><a class="ui-nav-item" href="#navigation"><span>Notes</span><ChevronRight size={16} aria-hidden="true" /></a></li>
+							</ul></nav>
+						</UiSidebar>
+						<div class="gallery-navigation-demo__main">
+							<ol class="ui-breadcrumb"><li><a href="#navigation">Docs</a></li><li aria-hidden="true">/</li><li>Reading</li></ol>
+							<h3>Page navigation</h3>
+							<p>One surface pattern keeps navigation aligned across technical guides and the component reference.</p>
+						</div>
+					</div>
+					<div class="gallery-floating-demo">
+						<p class="gallery-component-label"><span>PaperDocsShell.astro uses UiFloatingSidebar.astro + UiFab.astro</span><code>.paper-docs</code><code>.ui-floating-sidebar</code><code>.ui-fab</code></p>
+						<UiFloatingSidebar className="gallery-floating-demo__sidebar" label="Floating sidebar example">
+							<p class="ui-kicker">Floating sidebar</p>
+							<strong>Reading guide</strong>
+							<p>Uses the same sidebar primitive as Paper docs, with elevation only while it floats.</p>
+						</UiFloatingSidebar>
+						<UiFab className="gallery-floating-demo__fab"><Menu size={17} aria-hidden="true" />Docs menu</UiFab>
+					</div>
+				</section>
+
+				<section id="website" class="gallery-panel" data-gallery-panel="website">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Website</p>
+						<h2>Website patterns</h2>
+						<p>These are the concrete shared building blocks used by the public site: persistent header navigation, LightField hero layers, optional prompts, carousel controls, and the two-band footer.</p>
+					</header>
+					<p class="gallery-component-label"><span>RefractHeader.astro + HeaderLink.astro</span><code>.site-header</code><code>.site-brand</code><code>.site-header__link</code></p>
+					<div class="gallery-hero-preview">
+						<nav class="gallery-hero-preview__nav" aria-label="Header preview"><strong>REFRACT</strong><div><HeaderLink href="/">Home</HeaderLink><HeaderLink href="/projects">Projects</HeaderLink><HeaderLink href="/about">About</HeaderLink></div></nav>
+						<div class="gallery-hero-preview__copy"><p class="ui-kicker ui-kicker--accent">LightField hero</p><h3>Bare hero copy</h3><p>Text sits directly on the field. Home centers it; other pages use the top-left or left-center alignment.</p></div>
+						<div class="gallery-hero-preview__content"><p class="ui-kicker">Content stage</p><strong>Blur begins around three-fifths down.</strong><UiTextLink href="#website">Explore the work <ArrowRight size={16} aria-hidden="true" /></UiTextLink></div>
+					</div>
+					<p class="gallery-component-label"><span>LightFieldHero.astro + LightFieldContent.astro + UiTextLink.astro</span><code>.lightfield-hero</code><code>.lightfield</code><code>.lightfield-content</code><code>.ui-text-link</code></p>
+					<div class="gallery-website-grid">
+						<a class="social-link" href="https://github.com/TheRefractCo"><span class="social-link__icon" aria-hidden="true">GH</span><span class="social-link__copy"><strong>GitHub</strong><small>TheRefractCo</small></span><span aria-hidden="true">↗</span></a>
+						<div class="gallery-language-debug"><UiSelect id="gallery-language" label="Language"><option>English</option><option>Polski</option></UiSelect><UiButton variant="secondary" size="small" data-gallery-language-dialog>Preview language dialog</UiButton></div>
+						<div class="gallery-consent-preview"><div><p class="ui-kicker">Analytics</p><strong>Optional measurement</strong><p>Help us understand the site without building a profile.</p></div><div class="gallery-inline"><UiButton size="small">Allow</UiButton><UiButton variant="secondary" size="small">Not now</UiButton></div></div>
+					</div>
+					<p class="gallery-component-label"><span>SocialLinks.astro + LanguagePicker.astro + LanguageSuggestion.astro + Analytics.astro</span><code>.social-link</code><code>.footer-language</code><code>.language-suggestion</code><code>.analytics-consent</code></p>
+					<div class="gallery-website-patterns">
+						<section class="gallery-carousel-preview" aria-labelledby="gallery-carousel-title"><header><h3 id="gallery-carousel-title">Carousel</h3><div><UiIconButton label="Previous screenshot">←</UiIconButton><UiIconButton label="Next screenshot">→</UiIconButton></div></header><div class="gallery-carousel-preview__rail"><article><span>Home</span></article><article><span>Privacy</span></article><article><span>Contact</span></article></div></section>
+						<section class="gallery-footer-preview" aria-label="Footer preview"><div class="gallery-footer-preview__social"><strong>Social band</strong><span>GitHub · Bluesky · Email</span></div><div class="gallery-footer-preview__main"><strong>REFRACT</strong><span>Explore · Company · Site</span></div></section>
+					</div>
+					<p class="gallery-component-label"><span>SnapCarousel.astro + RefractFooter.astro</span><code>.snap-carousel</code><code>.site-footer</code><code>.footer-social-band</code><code>.footer-main</code></p>
+				</section>
+
+				<section id="surfaces" class="gallery-panel" data-gallery-panel="surfaces">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Surfaces</p>
+						<h2>Surfaces and interruption</h2>
+						<p>Cards are independent content containers. Use a link card only when the whole region navigates; reserve the medium round token and stronger shadow for deliberate modal interruptions.</p>
+					</header>
+					<p class="gallery-component-label"><span>CSS primitives</span><code>.ui-card</code><code>.ui-card--subtle</code><code>.ui-card--interactive</code><code>.ui-dialog</code></p>
+					<div class="gallery-demo-grid">
+						<article class="ui-card"><h3>Default card</h3><p>Square, bordered, and intentionally quiet.</p></article>
+						<article class="ui-card ui-card--subtle"><h3>Subtle card</h3><p>For a grouped region on the same canvas.</p></article>
+						<a class="ui-card ui-card--interactive" href="#surfaces"><h3>Interactive card</h3><p>Hover confirms it is a destination.</p></a>
+					</div>
+					<div class="gallery-dialog-row">
+						<div class="ui-dialog" role="dialog" aria-label="Example dialog">
+							<p class="ui-kicker ui-kicker--accent">Dialog</p>
+							<h3>Use only when it matters</h3>
+							<p>Medium rounding and stronger elevation mark a deliberate interruption.</p>
+							<UiButton size="small">Continue</UiButton>
+						</div>
+					</div>
+				</section>
+
+				<section id="content" class="gallery-panel" data-gallery-panel="content">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Content</p>
+						<h2>Data display</h2>
+						<p>Tables use semantic table markup. Badges communicate compact status and must not be the only way a state is conveyed.</p>
+					</header>
+					<p class="gallery-component-label"><span>CSS primitives</span><code>.ui-table</code><code>.ui-badge</code><code>.ui-badge--accent</code><code>.ui-badge--positive</code></p>
+					<div class="gallery-table-wrap">
+						<table class="ui-table">
+							<thead><tr><th>Document</th><th>Status</th><th>Updated</th></tr></thead>
+							<tbody>
+								<tr><td>Design system guide</td><td><span class="ui-badge ui-badge--accent">Draft</span></td><td>Today</td></tr>
+								<tr><td>Reader shortcuts</td><td><span class="ui-badge ui-badge--positive">Published</span></td><td>Yesterday</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section id="feedback" class="gallery-panel" data-gallery-panel="feedback">
+					<header class="gallery-panel__header">
+						<p class="ui-kicker ui-kicker--accent">Feedback</p>
+						<h2>Status and feedback</h2>
+						<p>Use an alert for a user-visible condition, a progress bar for a measurable task, and badges for short statuses. None require a product-specific feedback component.</p>
+					</header>
+					<p class="gallery-component-label"><span>CSS primitives + controls</span><code>.ui-alert</code><code>.ui-alert__icon</code><code>.ui-progress</code><code>.ui-badge</code><code>.ui-button</code><code>.ui-icon-button</code></p>
+					<div class="gallery-feedback">
+						<div class="ui-alert"><span class="ui-alert__icon"><AlertCircle size={18} aria-hidden="true" /></span><div><strong>Sync paused</strong><p>Reconnect to continue uploading reading progress.</p></div></div>
+						<div class="gallery-progress"><div><strong>Downloading</strong><span>68%</span></div><div class="ui-progress"><span style="width: 68%"></span></div></div>
+						<div class="gallery-inline"><span class="ui-badge">Neutral</span><span class="ui-badge ui-badge--accent">Accent</span><span class="ui-badge ui-badge--positive"><Check size={13} aria-hidden="true" /> Complete</span><UiButton variant="secondary" size="small"><Download size={15} aria-hidden="true" />Download</UiButton><UiIconButton label="Help"><CircleHelp size={18} aria-hidden="true" /></UiIconButton></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+</RefractBaseLayout>
+
+<script>
+	const setupGallery = () => {
+		const gallery = document.querySelector<HTMLElement>('[data-ux-gallery]');
+		if (!gallery || gallery.dataset.ready === 'true') return;
+		gallery.dataset.ready = 'true';
+
+		const root = document.documentElement;
+		const themeSelect = gallery.querySelector<HTMLSelectElement>('[data-gallery-theme]');
+		const paletteSelect = gallery.querySelector<HTMLSelectElement>('[data-gallery-palette]');
+		const navItems = [...gallery.querySelectorAll<HTMLAnchorElement>('[data-gallery-category]')];
+		const panels = [...gallery.querySelectorAll<HTMLElement>('[data-gallery-panel]')];
+		const languageDialogTrigger = gallery.querySelector<HTMLButtonElement>('[data-gallery-language-dialog]');
+		const updateTokenValues = () => {
+			const styles = getComputedStyle(root);
+			gallery.querySelectorAll<HTMLOutputElement>('[data-token-value]').forEach((output) => {
+				const token = output.dataset.tokenValue;
+				if (token) output.value = styles.getPropertyValue(token).trim();
+			});
+		};
+
+		const setAppearance = () => {
+			const theme = themeSelect?.value ?? 'system';
+			const palette = paletteSelect?.value ?? 'default';
+			if (theme === 'system') delete root.dataset.theme;
+			else root.dataset.theme = theme;
+			if (palette === 'default') delete root.dataset.palette;
+			else root.dataset.palette = palette;
+			updateTokenValues();
+		};
+
+		const setCategory = (category: string) => {
+			panels.forEach((panel) => { panel.hidden = panel.dataset.galleryPanel !== category; });
+			navItems.forEach((item) => {
+				const active = item.dataset.galleryCategory === category;
+				item.toggleAttribute('aria-current', active);
+			});
+		};
+
+		themeSelect?.addEventListener('change', setAppearance);
+		paletteSelect?.addEventListener('change', setAppearance);
+		languageDialogTrigger?.addEventListener('click', () => {
+			const dialog = document.querySelector<HTMLDialogElement>('[data-language-suggestion]');
+			if (!dialog) return;
+			if (dialog.open) dialog.close();
+			else dialog.showModal();
+		});
+		navItems.forEach((item) => item.addEventListener('click', (event) => {
+			event.preventDefault();
+			const category = item.dataset.galleryCategory ?? 'foundations';
+			setCategory(category);
+			history.replaceState(null, '', `#${category}`);
+		}));
+		setAppearance();
+		setCategory(location.hash.slice(1) || 'foundations');
+	};
+
+	const galleryWindow = window as Window & { refractGallerySetup?: boolean };
+	const resetGalleryAppearance = () => {
+		if (!document.querySelector('[data-ux-gallery]')) return;
+		delete document.documentElement.dataset.theme;
+		delete document.documentElement.dataset.palette;
+	};
+
+	if (!galleryWindow.refractGallerySetup) {
+		document.addEventListener('astro:page-load', setupGallery);
+		document.addEventListener('astro:before-preparation', resetGalleryAppearance);
+		galleryWindow.refractGallerySetup = true;
+	}
+	setupGallery();
+</script>

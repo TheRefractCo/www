@@ -7,13 +7,16 @@ interface Props {
 	tone?: 'blue' | 'violet' | 'amber';
 }
 
+import UiButton from './UiButton.astro';
+
 const { id, label, description, encodedAddress, tone = 'blue' } = Astro.props;
 const analyticsLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+const noScriptAddress = atob(encodedAddress);
 ---
 
 <article
 	id={id}
-	class={`email-card email-card--${tone}`}
+	class={`ui-card email-card email-card--${tone}`}
 	data-email-card
 	data-encoded-address={encodedAddress}
 >
@@ -28,9 +31,8 @@ const analyticsLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
 	<p class="email-card__description">{description}</p>
 
 	<div class="email-card__actions">
-		<button
-			class="action-button action-button--primary"
-			type="button"
+		<UiButton
+			variant="primary"
 			data-email-compose
 			data-analytics-event="contact_action"
 			data-analytics-action="open_mail"
@@ -39,10 +41,9 @@ const analyticsLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
 			disabled
 		>
 			Open mail <span aria-hidden="true">↗</span>
-		</button>
-		<button
-			class="action-button action-button--secondary"
-			type="button"
+		</UiButton>
+		<UiButton
+			variant="secondary"
 			data-email-copy
 			data-analytics-event="contact_action"
 			data-analytics-action="copy_address"
@@ -51,11 +52,13 @@ const analyticsLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
 			disabled
 		>
 			Copy address
-		</button>
+		</UiButton>
 	</div>
 
 	<noscript>
-		<p class="email-card__noscript">Enable JavaScript to reveal this email address.</p>
+		<p class="email-card__noscript">
+			<a href={`mailto:${noScriptAddress}`}>{noScriptAddress}</a>
+		</p>
 	</noscript>
 </article>
 
