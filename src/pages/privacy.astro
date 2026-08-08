@@ -3,6 +3,7 @@ import CopyToast from "../components/CopyToast.astro";
 import EmailCard from "../components/EmailCard.astro";
 import LightFieldHero from "../components/LightFieldHero.astro";
 import RefractBaseLayout from "../layouts/RefractBaseLayout.astro";
+import { defaultLang } from "../i18n/ui";
 import { getLangFromUrl, useTranslatedPath } from "../i18n/utils";
 import "../styles/info-pages.css";
 
@@ -13,7 +14,8 @@ const localizedHref = useTranslatedPath(locale);
 <RefractBaseLayout
   title="Privacy | The Refract Co."
   description="Plain-English privacy information for refract.fyi and the Paper app by The Refract Co."
-  pageClass="privacy-shell"
+	pageClass="privacy-shell"
+	noIndex={locale !== defaultLang}
 >
   <div class="info-page privacy-page">
     <LightFieldHero

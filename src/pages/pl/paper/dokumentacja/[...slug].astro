@@ -55,7 +55,8 @@ const t = useTranslations(locale);
 <RefractBaseLayout
 	title={`${doc.data.title} | ${t('docs.shell.title')}`}
 	description={doc.data.description}
-	pageClass="wide-page paper-shell paper-docs-shell"
+		pageClass="wide-page paper-shell paper-docs-shell"
+		noIndex={doc.isFallback}
 >
 	<PaperDocsShell entries={entries} currentId={doc.id} locale={locale}>
 		{doc.isFallback && (

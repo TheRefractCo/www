@@ -3,14 +3,16 @@
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import '../styles/lightfield.css';
+import { getCollection } from 'astro:content';
 import type { ImageMetadata } from 'astro';
-import { defaultLang, localeMetadata, type Locale } from '../i18n/ui';
+import { defaultLang, localeMetadata, ui, type Locale } from '../i18n/ui';
 import { getLangFromUrl, getRouteFromUrl, localeList, useTranslatedPath } from '../i18n/utils';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	noIndex?: boolean;
 }
 
 const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
@@ -23,8 +25,27 @@ const canonicalPath = (path: string) => {
 const canonicalURL = new URL(canonicalPath(localizedPath(route, locale)), Astro.site);
 const alternateUrl = (targetLocale: Locale) =>
 	new URL(canonicalPath(localizedPath(route, targetLocale)), Astro.site);
+const docsRoute = route.startsWith('paper/docs/') ? route.slice('paper/docs/'.length) : undefined;
+const docsEntries = route === 'paper/docs' || docsRoute ? await getCollection('docs') : [];
+const sourceDoc = docsRoute
+	? docsEntries.find((entry) => entry.id === `${defaultLang}/${docsRoute}`)
+	: undefined;
+const isIndexableAlternate = (targetLocale: Locale) => {
+	if (targetLocale === defaultLang) return true;
+	if (route === 'paper') return Boolean(ui[targetLocale]);
+	if (route === 'paper/docs') {
+		return docsEntries.some((entry) => entry.id.startsWith(`${targetLocale}/`));
+	}
+	if (sourceDoc) {
+		return docsEntries.some(
+			(entry) => entry.id.startsWith(`${targetLocale}/`) && entry.data.docId === sourceDoc.data.docId,
+		);
+	}
+	return false;
+};
+const alternateLocales = localeList.filter(isIndexableAlternate);
 
-const { title, description, image } = Astro.props;
+const { title, description, image, noIndex = false } = Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -39,6 +60,7 @@ const { title, description, image } = Astro.props;
 	href={new URL('rss.xml', Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
+{noIndex && <meta name="robots" content="noindex,follow" />}
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -48,7 +70,7 @@ const { title, description, image } = Astro.props;
 <meta name="description" content={description} />
 <meta property="og:locale" content={localeMetadata[locale]?.ogLocale ?? locale.replace('-', '_')} />
 
-{localeList.map((targetLocale) => (
+{alternateLocales.map((targetLocale) => (
 	<link
 		rel="alternate"
 		hreflang={localeMetadata[targetLocale]?.hreflang ?? targetLocale}

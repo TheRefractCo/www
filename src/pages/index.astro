@@ -5,6 +5,7 @@ import paperOverview from '../assets/projects/paper/paper-overview.png';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import PaperActions from '../components/PaperActions.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import { defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/product-pages.css';
 
@@ -16,6 +17,7 @@ const localizedHref = useTranslatedPath(locale);
 	title="The Refract Co. | Thoughtful software"
 	description="The Refract Co. creates thoughtful, well-designed apps, tools, and digital experiences."
 	pageClass="wide-page home-shell"
+	noIndex={locale !== defaultLang}
 >
 	<div class="home-page">
 		<LightFieldHero

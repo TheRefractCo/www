@@ -1,9 +1,11 @@
 // @ts-check
 
+import fs from 'node:fs';
+import path from 'node:path';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
-import { defaultLang, languages, localeMetadata, routes } from './src/i18n/ui.ts';
+import { defaultLang, languages, localeMetadata, routes, ui } from './src/i18n/ui.ts';
 
 const siteUrl = 'https://refract.fyi';
 const localeCodes = Object.keys(languages);
@@ -11,6 +13,42 @@ const fallbackLocales = Object.fromEntries(
 	localeCodes
 		.filter((locale) => locale !== defaultLang)
 		.map((locale) => [locale, defaultLang]),
+);
+
+const readDocCatalog = (locale) => {
+	const root = path.resolve('src/content/docs', locale);
+	const documents = new Map();
+
+	const visit = (directory) => {
+		if (!fs.existsSync(directory)) return;
+
+		for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+			const filePath = path.join(directory, entry.name);
+			if (entry.isDirectory()) {
+				visit(filePath);
+				continue;
+			}
+			if (!entry.isFile() || !entry.name.endsWith('.md')) continue;
+
+			const source = fs.readFileSync(filePath, 'utf8');
+			const docId = source.match(/^docId:\s*(.+)$/m)?.[1]?.trim();
+			if (!docId) continue;
+
+			const route = path
+				.relative(root, filePath)
+				.replaceAll(path.sep, '/')
+				.replace(/\.md$/, '');
+			documents.set(route, docId);
+		}
+	};
+
+	visit(root);
+	return documents;
+};
+
+const sourceDocsByRoute = readDocCatalog(defaultLang);
+const translatedDocIdsByLocale = Object.fromEntries(
+	localeCodes.map((locale) => [locale, new Set(readDocCatalog(locale).values())]),
 );
 
 const normalizePath = (pathname) => {
@@ -56,7 +94,42 @@ const localizedPathFor = (logicalPath, locale) => {
 	return `${prefix}/${translatedPath}`.replace(/\/+/g, '/');
 };
 
+const withTrailingSlash = (pathname) => {
+	const normalized = pathname.replace(/\/+$/, '');
+	return normalized ? `${normalized}/` : '/';
+};
+
 const isDocsPath = (logicalPath) => logicalPath === 'paper/docs' || logicalPath.startsWith('paper/docs/');
+
+const nonLocalizedLogicalPaths = new Set(['', 'about', 'blog', 'contact', 'privacy', 'projects']);
+
+const isNonLocalizedFallbackPath = (pathname) => {
+	const locale = localeFromPath(pathname);
+	if (locale === defaultLang) return false;
+
+	const logicalPath = logicalPathFor(pathname);
+	return (
+		nonLocalizedLogicalPaths.has(logicalPath) ||
+		logicalPath.startsWith('blog/')
+	);
+};
+
+const isUntranslatedDocPath = (pathname) => {
+	const locale = localeFromPath(pathname);
+	if (locale === defaultLang) return false;
+
+	const logicalPath = logicalPathFor(pathname);
+	if (!isDocsPath(logicalPath)) return false;
+
+	const documentRoute = logicalPath.slice('paper/docs/'.length);
+	if (!documentRoute) return false;
+
+	const docId = sourceDocsByRoute.get(documentRoute);
+	return Boolean(docId && !translatedDocIdsByLocale[locale]?.has(docId));
+};
+
+const isFallbackContentPath = (pathname) =>
+	isNonLocalizedFallbackPath(pathname) || isUntranslatedDocPath(pathname) || logicalPathFor(pathname) === '404';
 
 const isLegacyLocalizedDocsPath = (pathname) => {
 	const locale = localeFromPath(pathname);
@@ -66,14 +139,30 @@ const isLegacyLocalizedDocsPath = (pathname) => {
 	return isDocsPath(logicalPath) && normalizePath(pathname) !== localizedPathFor(logicalPath, locale);
 };
 
-const getDocAlternateLinks = (itemUrl) => {
+const isIndexableLocalizedVariant = (logicalPath, locale) => {
+	if (locale === defaultLang) return true;
+	if (isNonLocalizedFallbackPath(localizedPathFor(logicalPath, locale))) return false;
+	if (logicalPath === 'paper') return Boolean(ui[locale]);
+	if (!isDocsPath(logicalPath)) return false;
+
+	const documentRoute = logicalPath.slice('paper/docs/'.length);
+	if (!documentRoute) return (translatedDocIdsByLocale[locale]?.size ?? 0) > 0;
+
+	const docId = sourceDocsByRoute.get(documentRoute);
+	return Boolean(docId && translatedDocIdsByLocale[locale]?.has(docId));
+};
+
+const getAlternateLinks = (itemUrl) => {
 	const url = new URL(itemUrl);
 	const logicalPath = logicalPathFor(url.pathname);
-	if (!isDocsPath(logicalPath)) return undefined;
+	const availableLocales = localeCodes.filter((locale) =>
+		isIndexableLocalizedVariant(logicalPath, locale),
+	);
+	if (availableLocales.length < 2) return undefined;
 
-	return localeCodes.map((locale) => ({
-		url: new URL(`${localizedPathFor(logicalPath, locale)}/`, siteUrl).href,
-		lang: localeMetadata[locale]?.sitemap ?? locale,
+	return availableLocales.map((locale) => ({
+		url: new URL(withTrailingSlash(localizedPathFor(logicalPath, locale)), siteUrl).href,
+		lang: localeMetadata[locale]?.hreflang ?? locale,
 	}));
 };
 
@@ -92,16 +181,13 @@ export default defineConfig({
 	integrations: [
 		mdx(),
 		sitemap({
-			filter: (page) => !isLegacyLocalizedDocsPath(new URL(page).pathname),
-			serialize: (item) => {
-				const links = getDocAlternateLinks(item.url);
-				return links ? { ...item, links } : item;
+			filter: (page) => {
+				const pathname = new URL(page).pathname;
+				return !isLegacyLocalizedDocsPath(pathname) && !isFallbackContentPath(pathname);
 			},
-			i18n: {
-				defaultLocale: defaultLang,
-				locales: Object.fromEntries(
-					localeCodes.map((locale) => [locale, localeMetadata[locale]?.sitemap ?? locale]),
-				),
+			serialize: (item) => {
+				const links = getAlternateLinks(item.url);
+				return links ? { ...item, links } : item;
 			},
 		}),
 	],

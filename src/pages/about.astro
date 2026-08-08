@@ -2,6 +2,7 @@
 import SocialLinks from '../components/SocialLinks.astro';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import { defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/info-pages.css';
 
@@ -14,6 +15,7 @@ const localizedHref = useTranslatedPath(locale);
 	description="The Refract Co. is an independent product brand making smart, helpful, and well-crafted experiences."
 	pageClass="about-shell"
 	footerVariant="compact"
+	noIndex={locale !== defaultLang}
 >
 	<div class="info-page about-page">
 		<LightFieldHero

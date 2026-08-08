@@ -1,7 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { defaultLang } from '../../../i18n/ui';
-import { getDocRouteId, useTranslatedPath } from '../../../i18n/utils';
+import { getDocRouteId, getLangFromUrl, useTranslatedPath } from '../../../i18n/utils';
 import PaperDocsShell from '../../../components/PaperDocsShell.astro';
 import RefractBaseLayout from '../../../layouts/RefractBaseLayout.astro';
 
@@ -33,15 +33,17 @@ const { entry, entries } = Astro.props;
 const { Content } = await render(entry);
 const entryId = getDocRouteId(entry.id, defaultLang);
 const categoryRoot = entryId.split('/')[0];
-const localizedHref = useTranslatedPath(defaultLang);
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
+const localizedHref = useTranslatedPath(locale);
 ---
 
 <RefractBaseLayout
 	title={`${entry.data.title} | Paper docs`}
 	description={entry.data.description}
 	pageClass="wide-page paper-shell paper-docs-shell"
+	noIndex={locale !== defaultLang}
 >
-	<PaperDocsShell entries={entries} currentId={entryId} locale={defaultLang}>
+	<PaperDocsShell entries={entries} currentId={entryId} locale={locale}>
 		<article id={entry.data.docId} data-doc-id={entry.data.docId} class="paper-docs__article">
 			<header class="paper-docs__article-header">
 				<p class="paper-docs__breadcrumb">

@@ -10,6 +10,7 @@ import PaperActions from '../components/PaperActions.astro';
 import PaperScreenshotRail from '../components/PaperScreenshotRail.astro';
 import SnapCarousel from '../components/SnapCarousel.astro';
 import RefractBaseLayout from '../layouts/RefractBaseLayout.astro';
+import { defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 import '../styles/product-pages.css';
 
@@ -21,6 +22,7 @@ const localizedHref = useTranslatedPath(locale);
 	title="Projects | The Refract Co."
 	description="Explore Paper and the small, carefully made projects from The Refract Co."
 	pageClass="wide-page projects-shell"
+	noIndex={locale !== defaultLang}
 >
 	<div class="projects-page">
 		<LightFieldHero

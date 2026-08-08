@@ -4,14 +4,23 @@ import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import LightFieldHero from '../components/LightFieldHero.astro';
 import RefractBaseLayout from './RefractBaseLayout.astro';
+import { defaultLang } from '../i18n/ui';
+import { getLangFromUrl } from '../i18n/utils';
 import '../styles/blog-pages.css';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const locale = getLangFromUrl(Astro.url, Astro.currentLocale);
 ---
 
-<RefractBaseLayout title={title} description={description} image={heroImage} pageClass="blog-post-shell">
+<RefractBaseLayout
+	title={title}
+	description={description}
+	image={heroImage}
+	pageClass="blog-post-shell"
+	noIndex={locale !== defaultLang}
+>
 	<article class="blog-post">
 		<LightFieldHero
 			className="blog-post-hero"

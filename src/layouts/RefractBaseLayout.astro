@@ -15,9 +15,10 @@ interface Props {
 	image?: ImageMetadata;
 	pageClass?: string;
 	footerVariant?: 'default' | 'compact';
+	noIndex?: boolean;
 }
 
-const { title, description, image, pageClass, footerVariant = 'default' } = Astro.props;
+const { title, description, image, pageClass, footerVariant = 'default', noIndex = false } = Astro.props;
 const pageLocale = Astro.currentLocale ?? defaultLang;
 
 const pageTransition = {
@@ -55,7 +56,7 @@ const pageTransition = {
 <!doctype html>
 	<html lang={pageLocale}>
 	<head>
-		<BaseHead title={title} description={description} image={image} />
+		<BaseHead title={title} description={description} image={image} noIndex={noIndex} />
 		<ClientRouter />
 	</head>
 	<body class={pageClass}>
